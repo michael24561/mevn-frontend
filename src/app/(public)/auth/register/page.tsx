@@ -5,11 +5,12 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    nombre: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "user"
+    telefono: "",
+    direccion: ""
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,10 +40,11 @@ export default function RegisterPage() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          name: formData.name,
+          nombre: formData.nombre,
           email: formData.email,
           password: formData.password,
-          role: formData.role
+          telefono: formData.telefono,
+          direccion: formData.direccion
         })
       });
 
@@ -92,14 +94,14 @@ export default function RegisterPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="form-group">
-          <label htmlFor="name" className="form-label">
+          <label htmlFor="nombre" className="form-label">
             Nombre completo
           </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="nombre"
+            name="nombre"
+            value={formData.nombre}
             onChange={handleChange}
             className="form-input"
             placeholder="Tu nombre"
@@ -119,6 +121,38 @@ export default function RegisterPage() {
             onChange={handleChange}
             className="form-input"
             placeholder="tu@email.com"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="telefono" className="form-label">
+            Teléfono
+          </label>
+          <input
+            type="text"
+            id="telefono"
+            name="telefono"
+            value={formData.telefono}
+            onChange={handleChange}
+            className="form-input"
+            placeholder="Tu teléfono"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="direccion" className="form-label">
+            Dirección
+          </label>
+          <input
+            type="text"
+            id="direccion"
+            name="direccion"
+            value={formData.direccion}
+            onChange={handleChange}
+            className="form-input"
+            placeholder="Tu dirección"
             required
           />
         </div>

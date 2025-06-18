@@ -20,18 +20,19 @@ export default function SignIn() {
 
     if (result?.error) {
       setError(result.error);
-    } else {
-      // Obtenemos la sesión actualizada después del login
-      const response = await fetch('/api/auth/session');
-      const session = await response.json();
-
-      // Redirigir según el rol
-      if (session?.user?.role === 'admin') {
-        router.push('/admin/dashboard'); // Ruta para admin
-      } else {
-        router.push('/'); // Ruta para usuario normal (página principal)
-      }
+      return;
     }
+
+    // Verificar sesión y redirigir según rol
+    const res = await fetch('/api/auth/session');
+    const session = await res.json();
+    
+    if (session?.user?.role === 'admin') {
+      router.push('/admin/dashboard');
+      return;
+    }
+    
+    router.push('/');
   };
 
   return (

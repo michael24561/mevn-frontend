@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// Exportamos authOptions para poder importarlo en otros archivos
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -43,12 +42,14 @@ export const authOptions = {
             throw new Error(data.message || "Error de autenticación");
           }
 
-          if (data?.empleado) {
+          if (data?.cliente) { // Cambiado de empleado a cliente
             return {
-              id: data.empleado.id,
-              email: data.empleado.email,
-              name: data.empleado.nombre,
-              role: data.empleado.role,
+              id: data.cliente.id,
+              email: data.cliente.email,
+              name: data.cliente.nombre,
+              role: data.cliente.role,
+              telefono: data.cliente.telefono,
+              direccion: data.cliente.direccion,
               token: data.token
             };
           }
@@ -71,6 +72,8 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.telefono = user.telefono;
+        token.direccion = user.direccion;
         token.accessToken = user.token;
       }
       return token;
@@ -80,6 +83,8 @@ export const authOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
+        session.user.telefono = token.telefono;
+        session.user.direccion = token.direccion;
         session.accessToken = token.accessToken;
       }
       return session;

@@ -29,13 +29,9 @@ export default function LoginPage() {
       return;
     }
 
-    const res = await fetch('/api/auth/session');
-    const session = await res.json();
-    
-    if (session?.user?.role === 'admin') {
-      router.push('/admin/dashboard');
-    } else {
-      router.push('/');
+    // Redirección simplificada - NextAuth ya maneja la sesión
+    if (result?.url) {
+      router.push(result.url);
     }
   };
 
