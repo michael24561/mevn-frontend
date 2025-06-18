@@ -11,15 +11,16 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/(public)/about/page": [
+    "/(public)/auth/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(public)/about/page.js"
+      "static/css/app/(public)/auth/layout.css",
+      "static/chunks/app/(public)/auth/layout.js"
     ],
-    "/shop/page": [
+    "/(public)/auth/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/shop/page.js"
+      "static/chunks/app/(public)/auth/login/page.js"
     ],
     "/admin/layout": [
       "static/chunks/webpack.js",
@@ -31,11 +32,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/admin/dashboard/page.js"
-    ],
-    "/admin/productos/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/productos/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

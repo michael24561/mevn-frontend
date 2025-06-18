@@ -15,6 +15,8 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useRouter } from 'next/navigation';
+import { PersonStandingIcon } from 'lucide-react';
+import { Category, Person } from '@mui/icons-material';
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
@@ -26,6 +28,8 @@ const Sidebar: React.FC = () => {
     { text: 'Gráficos', icon: <BarChartIcon />, path: '/admin/graficos' },
     { text: 'Inventario', icon: <InventoryIcon />, path: '/admin/inventario' },
     { text: 'Productos', icon: <StoreIcon />, path: '/admin/productos' },
+    { text: 'Categorias', icon: <Category />, path: '/admin/categorias' },
+    { text: 'Proveedores', icon: <Person />, path: '/admin/proveedores' },
   ];
 
   const handleNavigation = (path: string) => {
