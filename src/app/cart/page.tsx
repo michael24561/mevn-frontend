@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react'; // Si usas NextAuth.js
 
 interface CarritoItem {
   _id: string;
@@ -28,21 +29,19 @@ interface Carrito {
 export default function PaginaCarrito() {
   const [carrito, setCarrito] = useState<Carrito | null>(null);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession(); // Obtiene la sesión del usuario (NextAuth.js)
 
   useEffect(() => {
     const obtenerCarrito = async () => {
+      if (!session?.user?.id) return; // Si no hay usuario, no hacemos la petición
+
       try {
-        const response = await fetch('http://localhost:5000/api/carritos', {
-          credentials: 'include'
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al obtener el carrito');
-        }
-        
+        const response = await fetch(`http://localhost:5000/api/carritos?clienteId=${session.user.id}`);
+        if (!response.ok) throw new Error('Error al obtener el carrito');
+
         const data = await response.json();
         setCarrito(data);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.message || 'Error al cargar el carrito');
       } finally {
         setLoading(false);
@@ -50,51 +49,61 @@ export default function PaginaCarrito() {
     };
 
     obtenerCarrito();
-  }, []);
+  }, [session]); // Dependencia: se ejecuta cuando cambia la sesión
 
   const actualizarCantidad = async (itemId: string, nuevaCantidad: number) => {
-    if (nuevaCantidad < 1) return;
+    if (nuevaCantidad < 1 || !session?.user?.id) return;
 
     try {
       const response = await fetch(`http://localhost:5000/api/carritos/items/${itemId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ cantidad: nuevaCantidad })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cantidad: nuevaCantidad, clienteId: session.user.id })
       });
 
-      if (!response.ok) {
-        throw new Error('Error al actualizar la cantidad');
-      }
+      if (!response.ok) throw new Error('Error al actualizar la cantidad');
 
       const data = await response.json();
       setCarrito(data.carrito);
       toast.success('Cantidad actualizada');
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message || 'Error al actualizar');
     }
   };
 
   const eliminarItem = async (itemId: string) => {
+    if (!session?.user?.id) return;
+
     try {
       const response = await fetch(`http://localhost:5000/api/carritos/items/${itemId}`, {
         method: 'DELETE',
-        credentials: 'include'
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clienteId: session.user.id })
       });
 
-      if (!response.ok) {
-        throw new Error('Error al eliminar el producto');
-      }
+      if (!response.ok) throw new Error('Error al eliminar el producto');
 
       const data = await response.json();
       setCarrito(data.carrito);
       toast.success('Producto eliminado del carrito');
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message || 'Error al eliminar');
     }
   };
+
+  // Resto del código (UI) permanece igual...
+  if (loading) {
+    return (
+      <div className="container py-5 text-center">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ... El resto del código (UI) permanece igual ...
+
 
   if (loading) {
     return (
@@ -129,14 +138,26 @@ export default function PaginaCarrito() {
               {carrito.items.map((item) => (
                 <div key={item._id} className="row mb-4 align-items-center">
                   <div className="col-md-2">
-                    <Image
-                      src={item.producto.imagen || '/assets/img/licor_default.jpg'}
-                      alt={item.producto.nombre}
-                      width={100}
-                      height={100}
-                      className="img-fluid rounded"
-                    />
-                  </div>
+  <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+    <img
+  src={
+    item.producto.imagen
+      ? `http://localhost:5000${item.producto.imagen.startsWith('/') ? '' : '/uploads/'}${item.producto.imagen}`
+      : '/assets/img/licor_default.jpg'
+  }
+  alt={item.producto.nombre}
+  style={{
+    width: '100px',
+    height: '100px',
+    objectFit: 'cover',
+    borderRadius: '4px'
+  }}
+  onError={(e) => {
+    (e.target as HTMLImageElement).src = '/assets/img/licor_default.jpg';
+  }}
+/>
+  </div>
+</div>
                   <div className="col-md-4">
                     <h5 className="mb-1">{item.producto.nombre}</h5>
                     <p className="mb-0 text-muted">Stock: {item.producto.stock}</p>

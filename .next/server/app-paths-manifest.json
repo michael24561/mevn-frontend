@@ -1,6 +1,12 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/cart/page": "app/cart/page.js",
+  "/(public)/about/page": "app/(public)/about/page.js",
   "/shop/page": "app/shop/page.js",
-  "/cart/page": "app/cart/page.js"
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/(public)/auth/login/page": "app/(public)/auth/login/page.js",
+  "/admin/categorias/page": "app/admin/categorias/page.js",
+  "/admin/proveedores/page": "app/admin/proveedores/page.js",
+  "/admin/productos/page": "app/admin/productos/page.js"
 }
