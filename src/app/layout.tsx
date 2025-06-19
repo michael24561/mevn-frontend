@@ -5,9 +5,9 @@ import '../../public/assets/css/bootstrap.min.css';
 import '../../public/assets/css/templatemo.css';
 import '../../public/assets/css/custom.css';
 import '../../public/assets/css/fontawesome.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { Providers } from './providers';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +40,24 @@ export default function RootLayout({
           <main className={isAuthPage ? 'bg-gray-50' : ''}>
             {children}
           </main>
+          {/* Configuración de ToastContainer */}
+          <ToastContainer 
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            toastStyle={{
+              borderRadius: '8px',
+              fontSize: '14px',
+              padding: '12px 16px',
+            }}
+          />
         </Providers>
       </body>
     </html>

@@ -1,0 +1,20 @@
+/* Estilos personalizados para las notificaciones */
+.Toastify__toast {
+  font-family: var(--font-geist-sans);
+}
+
+.Toastify__toast--success {
+  background-color: #28a745 !important;
+}
+
+.Toastify__toast--error {
+  background-color: #dc3545 !important;
+}
+
+.Toastify__toast--info {
+  background-color: #17a2b8 !important;
+}
+
+.Toastify__progress-bar {
+  height: 3px;
+}

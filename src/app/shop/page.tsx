@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface Producto {
   _id: string;
@@ -29,6 +30,7 @@ export default function PaginaTienda() {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cartCount, setCartCount] = useState(0);
 
   const handleLogout = async () => {
     try {
@@ -38,6 +40,62 @@ export default function PaginaTienda() {
     }
   };
 
+const agregarAlCarrito = async (productoId: string) => {
+  try {
+    // Obtener el producto para mostrar su nombre en el mensaje
+    const producto = productos.find(p => p._id === productoId);
+    const productoNombre = producto?.nombre || 'producto';
+
+    // Mostrar mensaje de carga
+    const toastId = toast.loading(`Agregando ${productoNombre} al carrito...`);
+
+    const clienteId = session?.user?.id || 'admin';
+
+    const response = await fetch('http://localhost:5000/api/carritos/items', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productoId,
+        cantidad: 1,
+        clienteId
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al agregar al carrito');
+    }
+
+    const data = await response.json();
+    setCartCount(prev => prev + 1);
+    
+    // Actualizar el toast a éxito
+    toast.update(toastId, {
+      render: `¡${productoNombre} agregado al carrito!`,
+      type: "success",
+      isLoading: false,
+      autoClose: 3000,
+      closeButton: true,
+    });
+    
+    return data;
+  } catch (error) {
+    // Mostrar error específico
+    toast.error(error.message || 'Error al agregar al carrito', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    console.error('Error:', error);
+  }
+};
   useEffect(() => {
     const cargarProductos = async () => {
       try {
@@ -66,7 +124,22 @@ export default function PaginaTienda() {
       }
     };
     cargarProductos();
-  }, []);
+
+    if (status === "authenticated") {
+      const cargarCarrito = async () => {
+        try {
+          const response = await fetch('/api/carrito');
+          if (response.ok) {
+            const data = await response.json();
+            setCartCount(data.items?.length || 0);
+          }
+        } catch (error) {
+          console.error('Error al cargar carrito:', error);
+        }
+      };
+      cargarCarrito();
+    }
+  }, [status]);
 
   if (loading) {
     return (
@@ -336,76 +409,72 @@ export default function PaginaTienda() {
 
             {/* Cuadrícula de Productos */}
             {productos.length === 0 ? (
-              <div className="alert alert-warning text-center">
-                No hay productos disponibles
+    <div className="alert alert-warning text-center">
+      No hay productos disponibles
+    </div>
+  ) : (
+    <div className="row">
+      {productos.map((producto) => (
+        <div key={producto._id} className="col-md-4 mb-4">
+          <div className="card mb-4 product-wap rounded-0 h-100">
+            <div className="card rounded-0 position-relative">
+              <img 
+                className="card-img rounded-0 img-fluid" 
+                src={producto.imagen} 
+                alt={producto.nombre}
+                style={{ height: '300px', objectFit: 'cover' }}
+              />
+              <div className="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                <Link 
+                  href={`/shop-single/${producto._id}`} 
+                  className="btn btn-success text-white"
+                >
+                  Ver detalles
+                </Link>
               </div>
-            ) : (
-              <div className="row">
-                {productos.map((producto) => (
-                  <div key={producto._id} className="col-md-4 mb-4">
-                    <div className="card mb-4 product-wap rounded-0 h-100">
-                      <div className="card rounded-0">
-                        <img 
-                          className="card-img rounded-0 img-fluid" 
-                          src={producto.imagen} 
-                          alt={producto.nombre}
-                          style={{ height: '300px', objectFit: 'cover' }}
-                        />
-                        <div className="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                          <ul className="list-unstyled">
-                            <li>
-                              <button className="btn btn-success text-white">
-                                <i className="far fa-heart"></i>
-                              </button>
-                            </li>
-                            <li>
-                              <Link 
-                                href={`/shop-single/${producto._id}`} 
-                                className="btn btn-success text-white mt-2"
-                              >
-                                <i className="far fa-eye"></i>
-                              </Link>
-                            </li>
-                            <li>
-                              <button className="btn btn-success text-white mt-2">
-                                <i className="fas fa-cart-plus"></i>
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="card-body">
-                        <Link 
-                          href={`/shop-single/${producto._id}`} 
-                          className="h3 text-decoration-none"
-                        >
-                          {producto.nombre}
-                        </Link>
-                        <ul className="w-100 list-unstyled d-flex justify-content-between mb-0">
-                          <li>Stock: {producto.stock}</li>
-                          {producto.categoria && (
-                            <li className="text-muted">{producto.categoria.nombre}</li>
-                          )}
-                        </ul>
-                        <ul className="list-unstyled d-flex justify-content-center mb-1">
-                          <li>
-                            <i className="text-warning fa fa-star"></i>
-                            <i className="text-warning fa fa-star"></i>
-                            <i className="text-warning fa fa-star"></i>
-                            <i className="text-muted fa fa-star"></i>
-                            <i className="text-muted fa fa-star"></i>
-                          </li>
-                        </ul>
-                        <p className="text-center mb-0">${producto.precio.toFixed(2)}</p>
-                        {producto.descripcion && (
-                          <p className="text-muted small mt-2">{producto.descripcion.substring(0, 60)}...</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            </div>
+            <div className="card-body text-center">
+              <Link 
+                href={`/shop-single/${producto._id}`} 
+                className="h3 text-decoration-none d-block mb-2"
+              >
+                {producto.nombre}
+              </Link>
+              <ul className="w-100 list-unstyled d-flex justify-content-between mb-2">
+                <li>Stock: {producto.stock}</li>
+                {producto.categoria && (
+                  <li className="text-muted">{producto.categoria.nombre}</li>
+                )}
+              </ul>
+              <p className="text-center mb-3 h4">${producto.precio.toFixed(2)}</p>
+              
+              <button 
+  onClick={() => agregarAlCarrito(producto._id)}
+  className="btn btn-success w-100"
+  disabled={producto.stock <= 0}
+  style={{
+    transition: 'all 0.3s ease',
+    transform: 'scale(1)'
+  }}
+  onMouseDown={(e) => {
+    e.currentTarget.style.transform = 'scale(0.95)';
+  }}
+  onMouseUp={(e) => {
+    e.currentTarget.style.transform = 'scale(1)';
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = 'scale(1)';
+  }}
+>
+  {producto.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
+</button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
 
             {/* Paginación */}
             <div className="row">
