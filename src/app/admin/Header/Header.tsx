@@ -3,25 +3,25 @@
 import React, { useState } from 'react';
 import {
   AppBar, Toolbar, Typography, IconButton, Avatar,
-  Menu, MenuItem, Divider, Box, InputBase
+  Menu, MenuItem, Divider, Box, InputBase, Badge
 } from '@mui/material';
 import {
-  Menu as MenuIcon, Search as SearchIcon, AccountCircle,
-  ExitToApp, Brightness4, Brightness7
+  Menu as MenuIcon, 
+  Search as SearchIcon, 
+  Notifications as NotificationsIcon,
+  AccountCircle,
+  ExitToApp
 } from '@mui/icons-material';
 
 interface HeaderProps {
   project?: any;
   user: any;
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
   drawerOpen: boolean;
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Header: React.FC<HeaderProps> = ({
-  project, user,
-  isDarkMode, toggleDarkMode, drawerOpen, setDrawerOpen
+  project, user, drawerOpen, setDrawerOpen
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState('');
@@ -30,7 +30,11 @@ const Header: React.FC<HeaderProps> = ({
   const handleMenuClose = () => setAnchorEl(null);
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#2D8F2F' }}>
+    <AppBar position="static" sx={{ 
+      backgroundColor: '#1976d2', // Azul principal
+      boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.1)',
+      borderBottom: '1px solid rgba(255,255,255,0.1)'
+    }}>
       <Toolbar>
         <IconButton
           edge="start"
@@ -42,37 +46,78 @@ const Header: React.FC<HeaderProps> = ({
           <MenuIcon />
         </IconButton>
 
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>Panel de Administración</Typography>
+        <Typography variant="h6" sx={{ 
+          flexGrow: 1, 
+          fontWeight: '600',
+          letterSpacing: '0.5px'
+        }}>
+          Sistema Administrativo
+        </Typography>
 
         {project && (
-          <Typography variant="subtitle1" sx={{ mx: 2, fontWeight: 'bold' }}>
-            {project.nombre}
-          </Typography>
+          <Box sx={{
+            backgroundColor: 'rgba(255,255,255,0.15)',
+            px: 2,
+            py: 1,
+            borderRadius: '4px',
+            mx: 2
+          }}>
+            <Typography variant="subtitle1" sx={{ 
+              fontWeight: '500',
+              color: 'white'
+            }}>
+              {project.nombre}
+            </Typography>
+          </Box>
         )}
 
         <Box sx={{
-          display: 'flex', alignItems: 'center',
+          display: 'flex', 
+          alignItems: 'center',
           backgroundColor: 'rgba(255,255,255,0.15)',
-          padding: '0 8px', borderRadius: '4px', mx: 2,
-          width: { xs: '100px', sm: '200px', md: '300px' }
+          padding: '0 12px', 
+          borderRadius: '4px', 
+          mx: 2,
+          width: { xs: '100px', sm: '200px', md: '300px' },
+          '&:hover': {
+            backgroundColor: 'rgba(255,255,255,0.25)'
+          }
         }}>
-          <SearchIcon sx={{ mr: 1 }} />
+          <SearchIcon sx={{ mr: 1, fontSize: '20px' }} />
           <InputBase
             placeholder="Buscar..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            sx={{ color: 'inherit', width: '100%' }}
+            sx={{ 
+              color: 'inherit', 
+              width: '100%',
+              '& input::placeholder': {
+                color: 'rgba(255,255,255,0.8)',
+                opacity: 1
+              }
+            }}
           />
         </Box>
 
-        <IconButton color="inherit" onClick={toggleDarkMode}>
-          {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+        <IconButton color="inherit" sx={{ mx: 1 }}>
+          <Badge badgeContent={4} color="error">
+            <NotificationsIcon />
+          </Badge>
         </IconButton>
 
         <Box>
           <IconButton onClick={handleMenuOpen} color="inherit">
-            <Avatar sx={{ bgcolor: 'white', color: '#002607E0' }}>
-              <AccountCircle />
+            <Avatar sx={{ 
+              bgcolor: 'rgba(255,255,255,0.2)', 
+              color: 'white',
+              width: 40,
+              height: 40,
+              fontSize: '1.1rem',
+              '&:hover': {
+                bgcolor: 'rgba(255,255,255,0.3)'
+              }
+            }}>
+              {user?.name?.charAt(0)?.toUpperCase() || <AccountCircle />}
             </Avatar>
           </IconButton>
           <Menu
@@ -84,24 +129,34 @@ const Header: React.FC<HeaderProps> = ({
             sx={{
               mt: 1,
               '& .MuiPaper-root': {
-                minWidth: '200px',
+                minWidth: '220px',
                 boxShadow: '0px 4px 20px rgba(0,0,0,0.15)',
-                borderRadius: '8px'
+                borderRadius: '8px',
+                border: '1px solid rgba(0,0,0,0.05)'
               }
             }}
           >
-            <MenuItem disabled sx={{ opacity: 1, cursor: 'default' }}>
+            <MenuItem disabled sx={{ opacity: 1, cursor: 'default', py: 2 }}>
               <Box>
-                <Typography variant="subtitle2" color="text.secondary">Usuario</Typography>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Sesión activa
+                </Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {user?.username || 'Desconocido'}
+                  {user?.name || 'Usuario'}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {user?.email || 'admin@sistema.com'}
                 </Typography>
               </Box>
             </MenuItem>
             <Divider />
-            <MenuItem>
-              <ExitToApp sx={{ mr: 1.5, fontSize: '20px' }} />
-              Cerrar sesión
+            <MenuItem sx={{ py: 1.5 }}>
+              <AccountCircle sx={{ mr: 1.5, fontSize: '22px', color: '#1976d2' }} />
+              <Typography>Mi perfil</Typography>
+            </MenuItem>
+            <MenuItem sx={{ py: 1.5 }}>
+              <ExitToApp sx={{ mr: 1.5, fontSize: '22px', color: '#1976d2' }} />
+              <Typography>Cerrar sesión</Typography>
             </MenuItem>
           </Menu>
         </Box>

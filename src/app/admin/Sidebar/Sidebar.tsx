@@ -7,29 +7,53 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
+  Divider
 } from '@mui/material';
-import StoreIcon from '@mui/icons-material/Store';
-import HistoryIcon from '@mui/icons-material/History';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {
+  ShoppingCart as VentasIcon,
+  History as HistorialIcon,
+  People as ClientesIcon,
+  BarChart as ReportesIcon,
+  Inventory as InventarioIcon,
+  Store as ProductosIcon,
+  Category as CategoriasIcon,
+  Person as ProveedoresIcon
+} from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
-import { PersonStandingIcon } from 'lucide-react';
-import { Category, Person } from '@mui/icons-material';
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
 
-  const menuItems = [
-    { text: 'Ventas', icon: <ShoppingCartIcon />, path: '/admin/ventas' },
-    { text: 'Historiales', icon: <HistoryIcon />, path: '/admin/historiales' },
-    { text: 'Clientes', icon: <PeopleIcon />, path: '/admin/clientes' },
-    { text: 'Gráficos', icon: <BarChartIcon />, path: '/admin/graficos' },
-    { text: 'Inventario', icon: <InventoryIcon />, path: '/admin/inventario' },
-    { text: 'Productos', icon: <StoreIcon />, path: '/admin/productos' },
-    { text: 'Categorias', icon: <Category />, path: '/admin/categorias' },
-    { text: 'Proveedores', icon: <Person />, path: '/admin/proveedores' },
+  const menuGroups = [
+    {
+      title: 'Operaciones',
+      items: [
+        { text: 'Ventas', icon: <VentasIcon />, path: '/admin/ventas' },
+        { text: 'Historial', icon: <HistorialIcon />, path: '/admin/historial' }
+      ]
+    },
+    {
+      title: 'Gestión',
+      items: [
+        { text: 'Clientes', icon: <ClientesIcon />, path: '/admin/clientes' },
+        { text: 'Proveedores', icon: <ProveedoresIcon />, path: '/admin/proveedores' }
+      ]
+    },
+    {
+      title: 'Productos',
+      items: [
+        { text: 'Inventario', icon: <InventarioIcon />, path: '/admin/inventario' },
+        { text: 'Productos', icon: <ProductosIcon />, path: '/admin/productos' },
+        { text: 'Categorías', icon: <CategoriasIcon />, path: '/admin/categorias' }
+      ]
+    },
+    {
+      title: 'Reportes',
+      items: [
+        { text: 'Reportes', icon: <ReportesIcon />, path: '/admin/reportes' }
+      ]
+    }
   ];
 
   const handleNavigation = (path: string) => {
@@ -39,39 +63,94 @@ const Sidebar: React.FC = () => {
   return (
     <Box
       sx={{
-        width: 240,
+        width: 280,
         height: '100vh',
-        backgroundColor: '#2D8F2F',
+        backgroundColor: '#1976d2', // Azul principal de Material-UI
         color: 'white',
-        p: 2,
         display: 'flex',
         flexDirection: 'column',
+        boxShadow: '2px 0 10px rgba(0,0,0,0.1)'
       }}
     >
-      <Box sx={{ mb: 4 }}>
-        <h3 style={{ margin: 0 }}>Administrador</h3>
-        <p style={{ fontSize: 12 }}>Control preciso, decisiones inteligentes</p>
+      <Box sx={{ p: 3, pb: 2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+          Panel Administrativo
+        </Typography>
+        <Typography variant="caption" sx={{ opacity: 0.8 }}>
+          Gestión integral del sistema
+        </Typography>
       </Box>
-      <List>
-        {menuItems.map((item) => (
-          <ListItemButton
-            key={item.text}
-            onClick={() => handleNavigation(item.path)}
-            sx={{
-              borderRadius: 2,
-              mb: 1,
-              '&:hover': {
-                backgroundColor: 'white',
-                color: '#002607E0',
-                '& .MuiListItemIcon-root': { color: '#002607E0' },
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItemButton>
+
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)', mb: 1 }} />
+
+      <Box sx={{ overflowY: 'auto', flexGrow: 1, p: 2 }}>
+        {menuGroups.map((group, index) => (
+          <Box key={index} sx={{ mb: 2 }}>
+            <Typography 
+              variant="subtitle2" 
+              sx={{ 
+                px: 2, 
+                py: 1, 
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}
+            >
+              {group.title}
+            </Typography>
+            <List dense>
+              {group.items.map((item) => (
+                <ListItemButton
+                  key={item.text}
+                  onClick={() => handleNavigation(item.path)}
+                  sx={{
+                    borderRadius: 1,
+                    mb: 0.5,
+                    px: 2,
+                    py: 1,
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.15)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: 'rgba(255,255,255,0.25)',
+                      '& .MuiListItemIcon-root': {
+                        color: 'white'
+                      },
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ 
+                    color: 'inherit',
+                    minWidth: '36px'
+                  }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={item.text} 
+                    primaryTypographyProps={{
+                      fontSize: '0.9rem',
+                      fontWeight: 500
+                    }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
         ))}
-      </List>
+      </Box>
+
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)', mt: 'auto' }} />
+
+      <Box sx={{ 
+        p: 2,
+        textAlign: 'center',
+        backgroundColor: 'rgba(0,0,0,0.1)'
+      }}>
+        <Typography variant="caption" sx={{ opacity: 0.7 }}>
+          v2.1.0 • Sistema Admin
+        </Typography>
+      </Box>
     </Box>
   );
 };
