@@ -89,6 +89,341 @@
 .Toastify__progress-bar {
   height: 3px;
 }
+
+/* ===== MEJORAS DE FONDO Y DISEÑO ===== */
+
+/* Fondo principal con patrón elegante */
+body {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Patrón de fondo decorativo */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(89, 171, 110, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(25, 118, 210, 0.03) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 48%, rgba(89, 171, 110, 0.02) 50%, transparent 52%);
+  background-size: 200px 200px, 300px 300px, 100px 100px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Mejoras en el navbar */
+.navbar {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(89, 171, 110, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  z-index: 1000 !important;
+  position: relative;
+}
+
+/* Navbar superior mejorado */
+.navbar.bg-dark {
+  background: linear-gradient(90deg, #212529 0%, #343a40 100%) !important;
+  border-bottom: 2px solid rgba(89, 171, 110, 0.3);
+}
+
+/* Mejoras en cards y secciones */
+.card {
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Secciones con fondo mejorado */
+section {
+  position: relative;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  margin: 20px 0;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  z-index: 1;
+}
+
+/* Mejoras en botones */
+.btn-success {
+  background: linear-gradient(45deg, #59ab6e, #4caf50);
+  border: none;
+  box-shadow: 0 4px 15px rgba(89, 171, 110, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  background: linear-gradient(45deg, #4caf50, #45a049);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(89, 171, 110, 0.4);
+}
+
+/* Mejoras en el carrusel */
+.carousel {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-item {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Mejoras en el footer */
+footer {
+  background: linear-gradient(135deg, #212529 0%, #343a40 100%) !important;
+  border-top: 3px solid rgba(89, 171, 110, 0.3);
+}
+
+/* ===== MEJORAS EN NAVBAR Y MENÚS ===== */
+
+/* Espaciado mejorado en navbar */
+.navbar-nav .nav-link {
+  padding: 0.75rem 1.2rem !important;
+  margin: 0 0.2rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+  background: rgba(89, 171, 110, 0.1);
+  color: #59ab6e !important;
+}
+
+/* Menú desplegable mejorado */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.5rem 0;
+  z-index: 9999 !important;
+  position: absolute !important;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 0.2rem 0.5rem;
+}
+
+.dropdown-item:hover {
+  background: rgba(89, 171, 110, 0.1);
+  color: #59ab6e;
+  transform: translateX(5px);
+}
+
+/* Perfil de usuario mejorado */
+.user-profile-dropdown {
+  min-width: 280px;
+  padding: 1rem;
+  z-index: 9999 !important;
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+}
+
+.user-profile-header {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+.user-profile-info {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Íconos del navbar mejorados */
+.nav-icon {
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  margin: 0 0.3rem;
+}
+
+.nav-icon:hover {
+  background: rgba(89, 171, 110, 0.1);
+  transform: scale(1.1);
+}
+
+/* Badge del carrito mejorado */
+.badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  background: linear-gradient(45deg, #59ab6e, #4caf50) !important;
+  box-shadow: 0 2px 8px rgba(89, 171, 110, 0.3);
+}
+
+/* ===== CORRECCIÓN DE Z-INDEX PARA DROPDOWNS ===== */
+
+/* Asegurar que los dropdowns se muestren por encima de todo */
+.dropdown {
+  position: relative;
+  z-index: 9999 !important;
+}
+
+.dropdown-menu.show {
+  z-index: 9999 !important;
+  position: absolute !important;
+  display: block !important;
+  transform: none !important;
+  top: 100% !important;
+  left: auto !important;
+  right: 0 !important;
+}
+
+/* Estilos específicos para el dropdown de perfil */
+.user-profile-dropdown {
+  z-index: 9999 !important;
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+  min-width: 280px !important;
+  margin-top: 0.125rem !important;
+  transform: none !important;
+}
+
+.user-profile-dropdown.show {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Asegurar que el modal de búsqueda también tenga z-index correcto */
+.modal {
+  z-index: 9998 !important;
+}
+
+/* Asegurar que las secciones y cards no interfieran */
+section, .card {
+  position: relative;
+  z-index: 1;
+}
+
+/* Override de Bootstrap para dropdowns */
+.dropdown-menu {
+  z-index: 9999 !important;
+  position: absolute !important;
+  display: none;
+  float: left;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.375rem;
+}
+
+.dropdown-menu.show {
+  display: block !important;
+}
+
+/* Asegurar que el navbar tenga el z-index correcto */
+.navbar {
+  z-index: 1000 !important;
+  position: relative;
+}
+
+/* Asegurar que el contenedor del navbar tenga z-index */
+.navbar .container {
+  position: relative;
+  z-index: 1001;
+}
+
+/* ===== RESPONSIVE IMPROVEMENTS ===== */
+
+@media (max-width: 768px) {
+  .navbar-nav .nav-link {
+    padding: 0.5rem 1rem !important;
+    margin: 0.2rem 0;
+  }
+  
+  .nav-icon {
+    padding: 0.4rem;
+    margin: 0 0.2rem;
+  }
+  
+  section {
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Ajustes para móviles en dropdowns */
+  .dropdown-menu {
+    position: static !important;
+    float: none;
+    width: auto;
+    margin-top: 0;
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+/* ===== ANIMACIONES Y EFECTOS ===== */
+
+/* Animación de entrada para elementos */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card, section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Efecto de brillo en hover */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.card:hover::before {
+  left: 100%;
+}
 /*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./public/assets/css/bootstrap.min.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************************/
@@ -4895,7 +5230,7 @@ readers do not read off random characters that represent icons */
   font-weight: 400;
   font-display: block;
   src: url(/_next/static/media/fa-brands-400.542b8394.eot);
-  src: url(/_next/static/media/fa-brands-400.542b8394.eot?#iefix) format("embedded-opentype"), url(/_next/static/media/fa-brands-400.18993be8.woff2) format("woff2"), url(/_next/static/media/fa-brands-400.6f0371bc.woff) format("woff"), url(/_next/static/media/fa-brands-400.04d56fe8.ttf) format("truetype"), url(/_next/static/media/fa-brands-400.5676084d.svg#fontawesome) format("svg"); }
+  src: url(/_next/static/media/fa-brands-400.542b8394.eot?#iefix) format("embedded-opentype"), url(/_next/static/media/fa-brands-400.18993be8.woff2) format("woff2"), url(/_next/static/media/fa-brands-400.6f0371bc.woff) format("woff"), url(/_next/static/media/fa-brands-400.04d56fe8.ttf) format("truetype"), url(/_next/static/media/fa-brands-400.45ffe4ae.svg#fontawesome) format("svg"); }
 
 .fab {
   font-family: 'Font Awesome 5 Brands';
@@ -4906,7 +5241,7 @@ readers do not read off random characters that represent icons */
   font-weight: 400;
   font-display: block;
   src: url(/_next/static/media/fa-regular-400.15524754.eot);
-  src: url(/_next/static/media/fa-regular-400.15524754.eot?#iefix) format("embedded-opentype"), url(/_next/static/media/fa-regular-400.e45bb696.woff2) format("woff2"), url(/_next/static/media/fa-regular-400.9a8db673.woff) format("woff"), url(/_next/static/media/fa-regular-400.6b314a37.ttf) format("truetype"), url(/_next/static/media/fa-regular-400.41dc5fca.svg#fontawesome) format("svg"); }
+  src: url(/_next/static/media/fa-regular-400.15524754.eot?#iefix) format("embedded-opentype"), url(/_next/static/media/fa-regular-400.e45bb696.woff2) format("woff2"), url(/_next/static/media/fa-regular-400.9a8db673.woff) format("woff"), url(/_next/static/media/fa-regular-400.6b314a37.ttf) format("truetype"), url(/_next/static/media/fa-regular-400.c721d656.svg#fontawesome) format("svg"); }
 
 .far {
   font-family: 'Font Awesome 5 Free';
@@ -4917,7 +5252,7 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
   font-display: block;
   src: url(/_next/static/media/fa-solid-900.c2cee444.eot);
-  src: url(/_next/static/media/fa-solid-900.c2cee444.eot?#iefix) format("embedded-opentype"), url(/_next/static/media/fa-solid-900.16e3d2f0.woff2) format("woff2"), url(/_next/static/media/fa-solid-900.efdd46db.woff) format("woff"), url(/_next/static/media/fa-solid-900.bf8656b1.ttf) format("truetype"), url(/_next/static/media/fa-solid-900.6bdf7530.svg#fontawesome) format("svg"); }
+  src: url(/_next/static/media/fa-solid-900.c2cee444.eot?#iefix) format("embedded-opentype"), url(/_next/static/media/fa-solid-900.16e3d2f0.woff2) format("woff2"), url(/_next/static/media/fa-solid-900.efdd46db.woff) format("woff"), url(/_next/static/media/fa-solid-900.bf8656b1.ttf) format("truetype"), url(/_next/static/media/fa-solid-900.687e57dc.svg#fontawesome) format("svg"); }
 
 .fa,
 .fas {

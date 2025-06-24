@@ -4,24 +4,36 @@ import {
   Box, Typography, Button, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper, IconButton,
   Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Snackbar, Alert, CircularProgress
+  TextField, Snackbar, Alert, CircularProgress,
+  Avatar, Chip, Card, CardContent, Grid
 } from '@mui/material';
-import { Edit, Delete, Add } from '@mui/icons-material';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Category as CategoryIcon,
+  Visibility as ViewIcon
+} from '@mui/icons-material';
 
 interface Categoria {
   _id: string;
   nombre: string;
+  descripcion: string;
+  imagen?: string;
+  productosCount?: number;
+  activa: boolean;
+  createdAt: string;
 }
 
 export default function CategoriasPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCategoria, setCurrentCategoria] = useState<Categoria | null>(null);
-  const [nombre, setNombre] = useState('');
-  const [snackbar, setSnackbar] = useState({ 
-    open: false, 
-    message: '', 
-    severity: 'success' as 'success' | 'error' 
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [formState, setFormState] = useState({
+    nombre: '',
+    descripcion: '',
+    activa: true
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,8 +66,21 @@ export default function CategoriasPage() {
   }, []);
 
   const handleOpenDialog = (categoria: Categoria | null) => {
-    setCurrentCategoria(categoria);
-    setNombre(categoria ? categoria.nombre : '');
+    if (categoria) {
+      setCurrentCategoria(categoria);
+      setFormState({
+        nombre: categoria.nombre,
+        descripcion: categoria.descripcion,
+        activa: categoria.activa
+      });
+    } else {
+      setCurrentCategoria(null);
+      setFormState({
+        nombre: '',
+        descripcion: '',
+        activa: true
+      });
+    }
     setOpenDialog(true);
   };
 
@@ -74,7 +99,7 @@ export default function CategoriasPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nombre }),
+        body: JSON.stringify(formState),
       });
 
       if (!res.ok) {
@@ -84,7 +109,7 @@ export default function CategoriasPage() {
 
       setSnackbar({ 
         open: true, 
-        message: currentCategoria ? 'Categoría actualizada' : 'Categoría creada', 
+        message: currentCategoria ? 'Categoría actualizada exitosamente' : 'Categoría creada exitosamente', 
         severity: 'success' 
       });
       setOpenDialog(false);
@@ -101,70 +126,42 @@ export default function CategoriasPage() {
     }
   };
 
- const checkProductosAsociados = async (categoriaId: string) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/productos?categoria=${categoriaId}`);
-      
-      // Si hay error en la petición, asumimos que no hay productos para permitir la eliminación
-      if (!res.ok) {
-        console.error('Error verificando productos:', await res.text());
-        return false;
-      }
-      
-      const productos = await res.json();
-      return Array.isArray(productos) && productos.length > 0;
-    } catch (error) {
-      console.error('Error verificando productos:', error);
-      return false; // Por precaución, permitimos eliminar si hay error
-    }
-  };
-
-  const handleDelete = async (id: string, nombreCategoria: string) => {
-    if (!confirm(`¿Estás seguro de eliminar la categoría "${nombreCategoria}"?`)) return;
+  const handleDelete = async (id: string) => {
+    if (!confirm('¿Estás seguro de eliminar esta categoría?')) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/categorias/${id}`, {
-        method: 'DELETE'
+      const res = await fetch(`http://localhost:5000/api/categorias/${id}`, { 
+        method: 'DELETE' 
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Si hay productos asociados, el backend devuelve error 400
-        if (data.error && data.error.includes('productos asociados')) {
-          const productosLista = data.productos ? 
-            `Productos asociados: ${data.productos.join(', ')}` : 
-            '';
-          
-          setSnackbar({
-            open: true,
-            message: `${data.error} ${productosLista}`,
-            severity: 'error'
-          });
-          return;
-        }
-        throw new Error(data.error || 'Error al eliminar categoría');
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Error al eliminar la categoría');
       }
 
-      setSnackbar({
-        open: true,
-        message: data.mensaje || 'Categoría eliminada correctamente',
-        severity: 'success'
-      });
+      setSnackbar({ open: true, message: 'Categoría eliminada exitosamente', severity: 'success' });
       await loadCategorias();
     } catch (error) {
       console.error('Error:', error);
-      setSnackbar({
-        open: true,
-        message: error instanceof Error ? error.message : 'Error al eliminar categoría',
-        severity: 'error'
+      setSnackbar({ 
+        open: true, 
+        message: error instanceof Error ? error.message : 'Error al eliminar', 
+        severity: 'error' 
       });
     }
   };
 
-
-  const handleCloseSnackbar = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
+  const handleToggleStatus = async (id: string) => {
+    try {
+      setCategorias(prev => prev.map(cat => 
+        cat._id === id 
+          ? { ...cat, activa: !cat.activa }
+          : cat
+      ));
+      setSnackbar({ open: true, message: 'Estado actualizado', severity: 'success' });
+    } catch (error) {
+      setSnackbar({ open: true, message: 'Error al actualizar estado', severity: 'error' });
+    }
   };
 
   if (isLoading) {
@@ -181,104 +178,301 @@ export default function CategoriasPage() {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Gestión de Categorías
-      </Typography>
+    <Box sx={{ p: 0 }}>
+      {/* Header de la página */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+        <Box>
+          <Typography variant="h4" sx={{ 
+            fontWeight: '300',
+            color: '#212934',
+            mb: 1
+          }}>
+            Gestión de Categorías
+          </Typography>
+          <Typography variant="body1" sx={{ 
+            color: '#6c757d',
+            fontSize: '1rem'
+          }}>
+            Administra las categorías de productos del sistema
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => handleOpenDialog(null)}
+          sx={{
+            backgroundColor: '#59ab6e',
+            '&:hover': {
+              backgroundColor: '#4a8c5a',
+            },
+            px: 3,
+            py: 1.5
+          }}
+        >
+          Nueva Categoría
+        </Button>
+      </Box>
 
-      <Button 
-        variant="contained" 
-        startIcon={<Add />} 
-        onClick={() => handleOpenDialog(null)}
-        sx={{ mb: 3 }}
-      >
-        Nueva Categoría
-      </Button>
+      {/* Estadísticas rápidas */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ 
+            backgroundColor: '#59ab6e',
+            color: 'white',
+            transition: 'transform 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+            }
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: '600', mb: 1 }}>
+                    {categorias.length}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Total Categorías
+                  </Typography>
+                </Box>
+                <CategoryIcon sx={{ fontSize: '3rem', opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ 
+            backgroundColor: '#1976d2',
+            color: 'white',
+            transition: 'transform 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+            }
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: '600', mb: 1 }}>
+                    {categorias.filter(c => c.activa).length}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Categorías Activas
+                  </Typography>
+                </Box>
+                <CategoryIcon sx={{ fontSize: '3rem', opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ 
+            backgroundColor: '#ff9800',
+            color: 'white',
+            transition: 'transform 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+            }
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: '600', mb: 1 }}>
+                    {categorias.reduce((sum, cat) => sum + (cat.productosCount || 0), 0)}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Total Productos
+                  </Typography>
+                </Box>
+                <CategoryIcon sx={{ fontSize: '3rem', opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ 
+            backgroundColor: '#f44336',
+            color: 'white',
+            transition: 'transform 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+            }
+          }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: '600', mb: 1 }}>
+                    {categorias.filter(c => !c.activa).length}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Categorías Inactivas
+                  </Typography>
+                </Box>
+                <CategoryIcon sx={{ fontSize: '3rem', opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {categorias.map((categoria) => (
-              <TableRow key={categoria._id}>
-                <TableCell>{categoria.nombre}</TableCell>
-                <TableCell>
-                  <IconButton 
-                    onClick={() => handleOpenDialog(categoria)}
-                    color="primary"
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton 
-    onClick={() => handleDelete(categoria._id, categoria.nombre)}
-    color="error"
-  >
-    <Delete />
-  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {/* Tabla de categorías */}
+      <Card>
+        <CardContent sx={{ p: 0 }}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: '#f8f9fa' }}>
+                  <TableCell sx={{ fontWeight: '600', color: '#212934' }}>Categoría</TableCell>
+                  <TableCell sx={{ fontWeight: '600', color: '#212934' }}>Descripción</TableCell>
+                  <TableCell sx={{ fontWeight: '600', color: '#212934' }}>Productos</TableCell>
+                  <TableCell sx={{ fontWeight: '600', color: '#212934' }}>Estado</TableCell>
+                  <TableCell sx={{ fontWeight: '600', color: '#212934' }}>Fecha</TableCell>
+                  <TableCell sx={{ fontWeight: '600', color: '#212934' }}>Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {categorias.map((categoria) => (
+                  <TableRow key={categoria._id} sx={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Avatar sx={{ 
+                          bgcolor: '#59ab6e', 
+                          mr: 2,
+                          width: 40,
+                          height: 40
+                        }}>
+                          <CategoryIcon />
+                        </Avatar>
+                        <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
+                          {categoria.nombre}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ color: '#6c757d' }}>
+                        {categoria.descripcion}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        label={categoria.productosCount || 0}
+                        size="small"
+                        sx={{
+                          backgroundColor: '#e3f2fd',
+                          color: '#1976d2',
+                          fontWeight: '600'
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        label={categoria.activa ? 'Activa' : 'Inactiva'}
+                        size="small"
+                        onClick={() => handleToggleStatus(categoria._id)}
+                        sx={{
+                          backgroundColor: categoria.activa ? '#d4edda' : '#f8d7da',
+                          color: categoria.activa ? '#155724' : '#721c24',
+                          cursor: 'pointer',
+                          '&:hover': {
+                            backgroundColor: categoria.activa ? '#c3e6cb' : '#f5c6cb',
+                          }
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ color: '#6c757d' }}>
+                        {new Date(categoria.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton 
+                          size="small"
+                          onClick={() => handleOpenDialog(categoria)}
+                          sx={{ color: '#1976d2' }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton 
+                          size="small"
+                          onClick={() => handleDelete(categoria._id)}
+                          sx={{ color: '#f44336' }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
 
-      <Dialog 
-        open={openDialog} 
-        onClose={() => !isSubmitting && setOpenDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {currentCategoria ? 'Editar Categoría' : 'Nueva Categoría'}
+      {/* Dialog para crear/editar categoría */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ 
+          backgroundColor: '#f8f9fa',
+          borderBottom: '1px solid rgba(0,0,0,0.05)'
+        }}>
+          <Typography variant="h6" sx={{ fontWeight: '600', color: '#212934' }}>
+            {currentCategoria ? 'Editar Categoría' : 'Nueva Categoría'}
+          </Typography>
         </DialogTitle>
         <form onSubmit={handleSubmit}>
-          <DialogContent>
+          <DialogContent sx={{ pt: 3 }}>
             <TextField
-              autoFocus
-              margin="dense"
-              label="Nombre de la categoría"
-              type="text"
               fullWidth
-              variant="outlined"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              label="Nombre de la categoría"
+              value={formState.nombre}
+              onChange={(e) => setFormState(prev => ({ ...prev, nombre: e.target.value }))}
               required
-              sx={{ mt: 1 }}
+              sx={{ mb: 3 }}
+            />
+            <TextField
+              fullWidth
+              label="Descripción"
+              value={formState.descripcion}
+              onChange={(e) => setFormState(prev => ({ ...prev, descripcion: e.target.value }))}
+              multiline
+              rows={3}
+              sx={{ mb: 3 }}
             />
           </DialogContent>
-          <DialogActions>
+          <DialogActions sx={{ p: 3, pt: 0 }}>
             <Button 
-              onClick={() => setOpenDialog(false)} 
-              disabled={isSubmitting}
+              onClick={() => setOpenDialog(false)}
+              sx={{ color: '#6c757d' }}
             >
               Cancelar
             </Button>
             <Button 
-              type="submit" 
+              type="submit"
               variant="contained"
               disabled={isSubmitting}
-              endIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+              sx={{
+                backgroundColor: '#59ab6e',
+                '&:hover': {
+                  backgroundColor: '#4a8c5a',
+                }
+              }}
             >
-              {isSubmitting 
-                ? 'Guardando...' 
-                : currentCategoria ? 'Actualizar' : 'Crear'}
+              {isSubmitting ? 'Guardando...' : (currentCategoria ? 'Actualizar' : 'Crear')}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
 
+      {/* Snackbar para notificaciones */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
       >
         <Alert 
-          onClose={handleCloseSnackbar} 
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} 
           severity={snackbar.severity}
           sx={{ width: '100%' }}
         >

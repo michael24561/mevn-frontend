@@ -1,6 +1,8 @@
 // app/admin/layout.tsx
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import AdminLayoutClient from './AdminLayoutClient';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,11 +16,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="es">
-      <body className={inter.className}>
-        {children}
-      </body>
-    </html>
-  );
+  return <AdminLayoutClient>{children}</AdminLayoutClient>;
 }

@@ -4,9 +4,11 @@ import {
   Box, Typography, Button, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper, IconButton,
   Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Snackbar, Alert, Avatar, CircularProgress, MenuItem
+  TextField, Snackbar, Alert, Avatar, CircularProgress, MenuItem,
+  Card, CardContent, Grid, InputAdornment, Chip, Tooltip, FormControl, InputLabel, Select,
+  FormControlLabel, Switch
 } from '@mui/material';
-import { Edit, Delete, Add, CloudUpload } from '@mui/icons-material';
+import { Edit, Delete, Add, CloudUpload, Visibility, Search, FilterList, Refresh, Inventory } from '@mui/icons-material';
 
 interface Producto {
   _id: string;
@@ -17,6 +19,9 @@ interface Producto {
   imagen: string;
   categoria: { _id: string, nombre: string };
   proveedor: { _id: string, nombre: string };
+  estado: 'activo' | 'inactivo';
+  fechaCreacion: string;
+  codigo: string;
 }
 
 interface Categoria {
@@ -44,11 +49,16 @@ export default function ProductosPage() {
     imagen: null as File | null,
     imagenPreview: '',
     categoria: '',
-    proveedor: ''
+    proveedor: '',
+    estado: 'activo',
+    codigo: ''
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategoria, setFilterCategoria] = useState('');
+  const [filterEstado, setFilterEstado] = useState('');
 
   const loadData = async () => {
     try {
@@ -110,7 +120,9 @@ export default function ProductosPage() {
         imagen: null,
         imagenPreview: producto.imagen ? `${process.env.NEXT_PUBLIC_API_URL || ''}${producto.imagen}` : '',
         categoria: producto.categoria._id,
-        proveedor: producto.proveedor._id
+        proveedor: producto.proveedor._id,
+        estado: producto.estado,
+        codigo: producto.codigo
       });
     } else {
       setCurrentProducto(null);
@@ -122,7 +134,9 @@ export default function ProductosPage() {
         imagen: null,
         imagenPreview: '',
         categoria: '',
-        proveedor: ''
+        proveedor: '',
+        estado: 'activo',
+        codigo: ''
       });
     }
     setOpenDialog(true);
@@ -140,6 +154,8 @@ export default function ProductosPage() {
       formData.append('stock', formState.stock.toString());
       formData.append('categoria', formState.categoria);
       formData.append('proveedor', formState.proveedor);
+      formData.append('estado', formState.estado);
+      formData.append('codigo', formState.codigo);
       
       if (formState.imagen) {
         formData.append('imagen', formState.imagen);
@@ -202,6 +218,27 @@ export default function ProductosPage() {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
+  const filteredProductos = productos.filter(producto => {
+    const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         producto.codigo.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategoria = !filterCategoria || producto.categoria._id === filterCategoria;
+    const matchesEstado = !filterEstado || producto.estado === filterEstado;
+    
+    return matchesSearch && matchesCategoria && matchesEstado;
+  });
+
+  const getStockColor = (stock: number) => {
+    if (stock === 0) return 'error';
+    if (stock < 10) return 'warning';
+    return 'success';
+  };
+
+  const getStockText = (stock: number) => {
+    if (stock === 0) return 'Sin stock';
+    if (stock < 10) return 'Stock bajo';
+    return 'En stock';
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
@@ -225,6 +262,69 @@ export default function ProductosPage() {
         Nuevo Producto
       </Button>
 
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                placeholder="Buscar productos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormControl fullWidth>
+                <InputLabel>Categoría</InputLabel>
+                <Select
+                  value={filterCategoria}
+                  label="Categoría"
+                  onChange={(e) => setFilterCategoria(e.target.value)}
+                >
+                  <MenuItem value="">Todas</MenuItem>
+                  {categorias.map((cat) => (
+                    <MenuItem key={cat._id} value={cat._id}>
+                      {cat.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormControl fullWidth>
+                <InputLabel>Estado</InputLabel>
+                <Select
+                  value={filterEstado}
+                  label="Estado"
+                  onChange={(e) => setFilterEstado(e.target.value)}
+                >
+                  <MenuItem value="">Todos</MenuItem>
+                  <MenuItem value="activo">Activo</MenuItem>
+                  <MenuItem value="inactivo">Inactivo</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<Refresh />}
+                onClick={loadData}
+              >
+                Actualizar
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -240,7 +340,7 @@ export default function ProductosPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {productos.map((producto) => (
+            {filteredProductos.map((producto) => (
               <TableRow key={producto._id}>
                 <TableCell>{producto.nombre}</TableCell>
                 <TableCell>{producto.descripcion}</TableCell>
@@ -388,6 +488,33 @@ export default function ProductosPage() {
                     </MenuItem>
                   ))}
                 </TextField>
+              </Box>
+
+              <Box sx={{ flex: 1, minWidth: 300 }}>
+                <TextField
+                  margin="dense"
+                  label="Estado"
+                  select
+                  fullWidth
+                  variant="outlined"
+                  value={formState.estado}
+                  onChange={(e) => setFormState({...formState, estado: e.target.value as 'activo' | 'inactivo'})}
+                  required
+                  sx={{ mb: 2 }}
+                >
+                  <MenuItem value="activo">Activo</MenuItem>
+                  <MenuItem value="inactivo">Inactivo</MenuItem>
+                </TextField>
+                <TextField
+                  margin="dense"
+                  label="Código"
+                  fullWidth
+                  variant="outlined"
+                  value={formState.codigo}
+                  onChange={(e) => setFormState({...formState, codigo: e.target.value})}
+                  required
+                  sx={{ mb: 2 }}
+                />
               </Box>
             </Box>
           </DialogContent>
