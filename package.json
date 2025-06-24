@@ -21,6 +21,8 @@
     "@popperjs/core": "^2.11.8",
     "@radix-ui/react-progress": "^1.1.7",
     "bootstrap": "^5.3.6",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "lucide-react": "^0.514.0",
     "next": "15.3.2",
     "next-auth": "^4.24.11",

@@ -128,7 +128,7 @@ const agregarAlCarrito = async (productoId: string) => {
     if (status === "authenticated") {
       const cargarCarrito = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/carrito');
+          const response = await fetch(`http://localhost:5000/api/carritos?clienteId=${session.user.id}`);
           if (response.ok) {
             const data = await response.json();
             setCartCount(data.items?.length || 0);
