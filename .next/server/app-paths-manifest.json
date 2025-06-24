@@ -1,7 +1,14 @@
 {
-  "/page": "app/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/shop/page": "app/shop/page.js",
+  "/page": "app/page.js",
+  "/admin/reportes/page": "app/admin/reportes/page.js",
   "/admin/configuracion/page": "app/admin/configuracion/page.js",
-  "/admin/empleados/page": "app/admin/empleados/page.js",
-  "/admin/reportes/page": "app/admin/reportes/page.js"
+  "/admin/categorias/page": "app/admin/categorias/page.js",
+  "/admin/clientes/page": "app/admin/clientes/page.js",
+  "/admin/productos/page": "app/admin/productos/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/proveedores/page": "app/admin/proveedores/page.js",
+  "/admin/empleados/page": "app/admin/empleados/page.js"
 }
