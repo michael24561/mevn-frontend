@@ -121,16 +121,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "(ssr)/./node_modules/@mui/icons-material/esm/CloudUpload.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@mui/icons-material/esm/CloudUpload.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _utils_createSvgIcon_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/createSvgIcon.js */ \"(ssr)/./node_modules/@mui/material/esm/utils/createSvgIcon.js\");\n/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ \"(ssr)/./node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-runtime.js\");\n/* __next_internal_client_entry_do_not_use__ default auto */ \n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_utils_createSvgIcon_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(/*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(\"path\", {\n    d: \"M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96M14 13v4h-4v-4H7l5-5 5 5z\"\n}), 'CloudUpload'));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9ub2RlX21vZHVsZXMvQG11aS9pY29ucy1tYXRlcmlhbC9lc20vQ2xvdWRVcGxvYWQuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7OzZEQUVxRDtBQUNMO0FBQ2hELGlFQUFlQSxtRUFBYUEsQ0FBQyxXQUFXLEdBQUVFLHNEQUFJQSxDQUFDLFFBQVE7SUFDckRDLEdBQUc7QUFDTCxJQUFJLGNBQWMsRUFBQyIsInNvdXJjZXMiOlsiQzpcXFVzZXJzXFxzdmdhMVxcRG9jdW1lbnRzXFxQcm95ZWN0byBXZWIgTmV4dFxcZnJvbnRcXG1ldm4tZnJvbnRlbmRcXG5vZGVfbW9kdWxlc1xcQG11aVxcaWNvbnMtbWF0ZXJpYWxcXGVzbVxcQ2xvdWRVcGxvYWQuanMiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2UgY2xpZW50XCI7XG5cbmltcG9ydCBjcmVhdGVTdmdJY29uIGZyb20gXCIuL3V0aWxzL2NyZWF0ZVN2Z0ljb24uanNcIjtcbmltcG9ydCB7IGpzeCBhcyBfanN4IH0gZnJvbSBcInJlYWN0L2pzeC1ydW50aW1lXCI7XG5leHBvcnQgZGVmYXVsdCBjcmVhdGVTdmdJY29uKC8qI19fUFVSRV9fKi9fanN4KFwicGF0aFwiLCB7XG4gIGQ6IFwiTTE5LjM1IDEwLjA0QzE4LjY3IDYuNTkgMTUuNjQgNCAxMiA0IDkuMTEgNCA2LjYgNS42NCA1LjM1IDguMDQgMi4zNCA4LjM2IDAgMTAuOTEgMCAxNGMwIDMuMzEgMi42OSA2IDYgNmgxM2MyLjc2IDAgNS0yLjI0IDUtNSAwLTIuNjQtMi4wNS00Ljc4LTQuNjUtNC45Nk0xNCAxM3Y0aC00di00SDdsNS01IDUgNXpcIlxufSksICdDbG91ZFVwbG9hZCcpOyJdLCJuYW1lcyI6WyJjcmVhdGVTdmdJY29uIiwianN4IiwiX2pzeCIsImQiXSwiaWdub3JlTGlzdCI6WzBdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/@mui/icons-material/esm/CloudUpload.js\n");
-
-/***/ }),
-
 /***/ "(ssr)/./node_modules/@mui/icons-material/esm/Dashboard.js":
 /*!***********************************************************!*\
   !*** ./node_modules/@mui/icons-material/esm/Dashboard.js ***!
