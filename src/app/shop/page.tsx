@@ -31,6 +31,9 @@ export default function PaginaTienda() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cartCount, setCartCount] = useState(0);
+  const [categorias, setCategorias] = useState<
+    { _id: string; nombre: string; slug: string }[]
+  >([]);
 
   const handleLogout = async () => {
     try {
@@ -40,62 +43,59 @@ export default function PaginaTienda() {
     }
   };
 
-const agregarAlCarrito = async (productoId: string) => {
-  try {
-    // Obtener el producto para mostrar su nombre en el mensaje
-    const producto = productos.find(p => p._id === productoId);
-    const productoNombre = producto?.nombre || 'producto';
+  const agregarAlCarrito = async (productoId: string) => {
+    try {
+      const producto = productos.find(p => p._id === productoId);
+      const productoNombre = producto?.nombre || 'producto';
 
-    // Mostrar mensaje de carga
-    const toastId = toast.loading(`Agregando ${productoNombre} al carrito...`);
+      const toastId = toast.loading(`Agregando ${productoNombre} al carrito...`);
 
-    const clienteId = session?.user?.id || 'admin';
+      const clienteId = session?.user?.id || 'admin';
 
-    const response = await fetch('http://localhost:5000/api/carritos/items', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        productoId,
-        cantidad: 1,
-        clienteId
-      })
-    });
+      const response = await fetch('http://localhost:5000/api/carritos/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productoId,
+          cantidad: 1,
+          clienteId
+        })
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al agregar al carrito');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al agregar al carrito');
+      }
+
+      const data = await response.json();
+      setCartCount(prev => prev + 1);
+      
+      toast.update(toastId, {
+        render: `¡${productoNombre} agregado al carrito!`,
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+        closeButton: true,
+      });
+      
+      return data;
+    } catch (error) {
+      toast.error(error.message || 'Error al agregar al carrito', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      console.error('Error:', error);
     }
+  };
 
-    const data = await response.json();
-    setCartCount(prev => prev + 1);
-    
-    // Actualizar el toast a éxito
-    toast.update(toastId, {
-      render: `¡${productoNombre} agregado al carrito!`,
-      type: "success",
-      isLoading: false,
-      autoClose: 3000,
-      closeButton: true,
-    });
-    
-    return data;
-  } catch (error) {
-    // Mostrar error específico
-    toast.error(error.message || 'Error al agregar al carrito', {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
-    console.error('Error:', error);
-  }
-};
   useEffect(() => {
     const cargarProductos = async () => {
       try {
@@ -104,8 +104,20 @@ const agregarAlCarrito = async (productoId: string) => {
           throw new Error('Error al obtener los productos');
         }
         const data = await response.json();
+
+        const cargarCategorias = async () => {
+          try {
+            const response = await fetch('http://localhost:5000/api/categorias');
+            if (!response.ok) throw new Error('Error al cargar categorías');
+            const data = await response.json();
+            setCategorias(data);
+          } catch (err) {
+            console.error('Error al cargar categorías:', err);
+          }
+        };
+
+        cargarCategorias();
         
-        // Asegurarnos de que las imágenes tengan la URL completa si son rutas relativas
         const productosConImagen = data.map((producto: Producto) => ({
           ...producto,
           imagen: producto.imagen 
@@ -235,7 +247,6 @@ const agregarAlCarrito = async (productoId: string) => {
             </div>
             
             <div className="navbar align-self-center d-flex">
-              {/* Componente de búsqueda para móviles */}
               <div className="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
                 <div className="input-group">
                   <input 
@@ -250,18 +261,15 @@ const agregarAlCarrito = async (productoId: string) => {
                 </div>
               </div>
               
-              {/* Icono de búsqueda para desktop */}
               <a className="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
                 <i className="fa fa-fw fa-search text-dark mr-2"></i>
               </a>
               
-              {/* Carrito de compras */}
               <Link className="nav-icon position-relative text-decoration-none" href="/cart">
                 <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">3</span>
+                <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">{cartCount}</span>
               </Link>
 
-              {/* Área de usuario */}
               {status === "authenticated" ? (
                 <div className="dropdown ms-3">
                   <button
@@ -342,40 +350,21 @@ const agregarAlCarrito = async (productoId: string) => {
           <div className="col-lg-3">
             <h1 className="h2 pb-4">Categorías</h1>
             <ul className="list-unstyled templatemo-accordion">
-              <li className="pb-3">
-                <a className="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                  Tipo
-                  <i className="fa fa-fw fa-chevron-circle-down mt-1"></i>
-                </a>
-                <ul className="collapse show list-unstyled pl-3">
-                  <li><Link className="text-decoration-none" href="#">Whisky</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Vodka</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Ron</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Tequila</Link></li>
-                </ul>
-              </li>
-              <li className="pb-3">
-                <a className="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                  Ofertas
-                  <i className="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
-                </a>
-                <ul id="collapseTwo" className="collapse list-unstyled pl-3">
-                  <li><Link className="text-decoration-none" href="#">Promociones</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Ediciones Limitadas</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Combos</Link></li>
-                </ul>
-              </li>
-              <li className="pb-3">
-                <a className="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                  Precio
-                  <i className="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
-                </a>
-                <ul id="collapseThree" className="collapse list-unstyled pl-3">
-                  <li><Link className="text-decoration-none" href="#">Premium</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Gama Media</Link></li>
-                  <li><Link className="text-decoration-none" href="#">Básicos</Link></li>
-                </ul>
-              </li>
+              {categorias.length === 0 ? (
+                <li className="text-muted">No hay categorías registradas</li>
+              ) : (
+                categorias.map((categoria) => (
+                  <li key={categoria._id} className="pb-2">
+                    <Link
+                      className="d-flex justify-content-between h5 text-decoration-none"
+                      href={`/categorias/${categoria.slug}`}
+                    >
+                      {categoria.nombre}
+                      <i className="fa fa-fw fa-chevron-circle-right mt-1"></i>
+                    </Link>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 
@@ -409,72 +398,75 @@ const agregarAlCarrito = async (productoId: string) => {
 
             {/* Cuadrícula de Productos */}
             {productos.length === 0 ? (
-    <div className="alert alert-warning text-center">
-      No hay productos disponibles
-    </div>
-  ) : (
-    <div className="row">
-      {productos.map((producto) => (
-        <div key={producto._id} className="col-md-4 mb-4">
-          <div className="card mb-4 product-wap rounded-0 h-100">
-            <div className="card rounded-0 position-relative">
-              <img 
-                className="card-img rounded-0 img-fluid" 
-                src={producto.imagen} 
-                alt={producto.nombre}
-                style={{ height: '300px', objectFit: 'cover' }}
-              />
-              <div className="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                <Link 
-                  href={`/shop-single/${producto._id}`} 
-                  className="btn btn-success text-white"
-                >
-                  Ver detalles
-                </Link>
+              <div className="alert alert-warning text-center">
+                No hay productos disponibles
               </div>
-            </div>
-            <div className="card-body text-center">
-              <Link 
-                href={`/shop-single/${producto._id}`} 
-                className="h3 text-decoration-none d-block mb-2"
-              >
-                {producto.nombre}
-              </Link>
-              <ul className="w-100 list-unstyled d-flex justify-content-between mb-2">
-                <li>Stock: {producto.stock}</li>
-                {producto.categoria && (
-                  <li className="text-muted">{producto.categoria.nombre}</li>
-                )}
-              </ul>
-              <p className="text-center mb-3 h4">${producto.precio.toFixed(2)}</p>
-              
-              <button 
-  onClick={() => agregarAlCarrito(producto._id)}
-  className="btn btn-success w-100"
-  disabled={producto.stock <= 0}
-  style={{
-    transition: 'all 0.3s ease',
-    transform: 'scale(1)'
-  }}
-  onMouseDown={(e) => {
-    e.currentTarget.style.transform = 'scale(0.95)';
-  }}
-  onMouseUp={(e) => {
-    e.currentTarget.style.transform = 'scale(1)';
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.transform = 'scale(1)';
-  }}
->
-  {producto.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
-</button>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  )}
-
+            ) : (
+              <div className="row">
+                {productos.map((producto) => (
+                  <div key={producto._id} className="col-md-4 mb-4">
+                    <div className="card mb-4 product-wap rounded-0 h-100 d-flex flex-column">
+                      <div className="card rounded-0 position-relative">
+                        <img 
+                          className="card-img rounded-0 img-fluid" 
+                          src={producto.imagen} 
+                          alt={producto.nombre}
+                          style={{ height: '300px', objectFit: 'cover' }}
+                        />
+                        <div className="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                          <Link 
+                            href={`/shop-single/${producto._id}`} 
+                            className="btn btn-success text-white"
+                          >
+                            Ver detalles
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="card-body text-center d-flex flex-column">
+                        <div className="mb-3" style={{ minHeight: '72px' }}>
+                          <Link 
+                            href={`/shop-single/${producto._id}`} 
+                            className="h3 text-decoration-none d-block mb-2"
+                          >
+                            {producto.nombre}
+                          </Link>
+                          <ul className="w-100 list-unstyled d-flex justify-content-between mb-2">
+                            <li>Stock: {producto.stock}</li>
+                            {producto.categoria && (
+                              <li className="text-muted">{producto.categoria.nombre}</li>
+                            )}
+                          </ul>
+                          <p className="text-center mb-3 h4">${producto.precio.toFixed(2)}</p>
+                        </div>
+                        
+                        <div className="mt-auto">
+                          <button 
+                            onClick={() => agregarAlCarrito(producto._id)}
+                            className="btn btn-success w-100"
+                            disabled={producto.stock <= 0}
+                            style={{
+                              transition: 'all 0.3s ease',
+                              transform: 'scale(1)'
+                            }}
+                            onMouseDown={(e) => {
+                              e.currentTarget.style.transform = 'scale(0.95)';
+                            }}
+                            onMouseUp={(e) => {
+                              e.currentTarget.style.transform = 'scale(1)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.transform = 'scale(1)';
+                            }}
+                          >
+                            {producto.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Paginación */}
             <div className="row">

@@ -5,9 +5,50 @@ import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+interface Categoria {
+  _id: string;
+  nombre: string;
+  slug: string;
+  destacada?: boolean;
+}
+
 
 export default function HomePage() {
   const { data: session, status } = useSession();
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5000/api/categorias/destacadas?limit=3');
+        
+        if (!response.ok) {
+          throw new Error('Error al obtener categorías destacadas');
+        }
+        
+        const data = await response.json();
+        setCategorias(data);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+        setError(err instanceof Error ? err.message : 'Error desconocido');
+        // Categorías por defecto en caso de error
+        setCategorias([
+          { _id: '1', nombre: 'Whiskies Premium', slug: 'whisky' },
+          { _id: '2', nombre: 'Ron Añejo', slug: 'ron' },
+          { _id: '3', nombre: 'Vodka de Lujo', slug: 'vodka' }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -205,7 +246,7 @@ export default function HomePage() {
             <div className="container">
               <div className="row p-5">
                 <div className="mx-auto col-md-8 col-lg-6 order-lg-last">
-                  <img className="img-fluid" src="/assets/img/banner_whisky.jpg" alt="Colección de Whisky" />
+                  <img className="img-fluid" src="/assets/img/licoreria.jpg" alt="Colección de Whisky" />
                 </div>
                 <div className="col-lg-6 mb-0 d-flex align-items-center">
                   <div className="text-align-left align-self-center">
@@ -279,50 +320,71 @@ export default function HomePage() {
 
       {/* Categorías Destacadas */}
       <section className="container py-5">
-        <div className="row text-center pt-3">
-          <div className="col-lg-6 m-auto">
-            <h1 className="h1">Categorías Destacadas</h1>
-            <p>
-              Explora nuestras selecciones premium de las mejores categorías de licores.
-            </p>
+    <div className="row text-center pt-3">
+      <div className="col-lg-6 m-auto">
+        <h1 className="h1">Categorías Destacadas</h1>
+        <p>
+          Explora nuestras selecciones premium de las mejores categorías de licores.
+        </p>
+      </div>
+    </div>
+    
+    {loading ? (
+      <div className="row">
+        <div className="col-12 text-center py-5">
+          <div className="spinner-border text-success" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p className="mt-2">Cargando categorías...</p>
+        </div>
+      </div>
+    ) : (
+      <div className="row">
+        {categorias.map((categoria) => {
+          // Asignar imagen por defecto según la categoría
+          let imagenPorDefecto = '/assets/img/categoria_default.jpg';
+          
+          if (categoria.slug === 'whisky') {
+            imagenPorDefecto = '/assets/img/categoria_whisky.jpg';
+          } else if (categoria.slug === 'ron') {
+            imagenPorDefecto = '/assets/img/categoria_ron.jpg';
+          } else if (categoria.slug === 'vodka') {
+            imagenPorDefecto = '/assets/img/categoria_vodka.jpg';
+          }
+
+          return (
+            <div key={categoria._id} className="col-12 col-md-4 p-5 mt-3">
+              <Link href={`/categorias/${categoria.slug}`}>
+                <img 
+                  src={imagenPorDefecto} 
+                  className="rounded-circle img-fluid border" 
+                  alt={categoria.nombre}
+                  style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                />
+              </Link>
+              <h5 className="text-center mt-3 mb-3">{categoria.nombre}</h5>
+              <p className="text-center">
+                <Link href={`/categorias/${categoria.slug}`} className="btn btn-success">
+                  Ver Colección
+                </Link>
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    )}
+    
+    {error && (
+      <div className="row">
+        <div className="col-12 text-center">
+          <div className="alert alert-warning">
+            <p>{error}</p>
+            <p>Mostrando categorías por defecto</p>
           </div>
         </div>
-        <div className="row">
-          <div className="col-12 col-md-4 p-5 mt-3">
-            <Link href="/whisky">
-              <img src="/assets/img/categoria_whisky.jpg" className="rounded-circle img-fluid border" alt="Whiskies Premium" />
-            </Link>
-            <h5 className="text-center mt-3 mb-3">Whiskies Premium</h5>
-            <p className="text-center">
-              <Link href="/whisky" className="btn btn-success">
-                Ver Colección
-              </Link>
-            </p>
-          </div>
-          <div className="col-12 col-md-4 p-5 mt-3">
-            <Link href="/ron">
-              <img src="/assets/img/categoria_ron.jpg" className="rounded-circle img-fluid border" alt="Ron Añejo" />
-            </Link>
-            <h2 className="h5 text-center mt-3 mb-3">Ron Añejo</h2>
-            <p className="text-center">
-              <Link href="/ron" className="btn btn-success">
-                Ver Colección
-              </Link>
-            </p>
-          </div>
-          <div className="col-12 col-md-4 p-5 mt-3">
-            <Link href="/vodka">
-              <img src="/assets/img/categoria_vodka.jpg" className="rounded-circle img-fluid border" alt="Vodka de Lujo" />
-            </Link>
-            <h2 className="h5 text-center mt-3 mb-3">Vodka de Lujo</h2>
-            <p className="text-center">
-              <Link href="/vodka" className="btn btn-success">
-                Ver Colección
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
+      </div>
+    )}
+  </section>
 
       {/* Productos Destacados */}
       <section className="bg-light">
