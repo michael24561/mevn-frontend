@@ -414,18 +414,15 @@ export default function PaginaTienda() {
                           style={{ height: '300px', objectFit: 'cover' }}
                         />
                         <div className="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                          <Link 
-                            href={`/shop-single/${producto._id}`} 
-                            className="btn btn-success text-white"
-                          >
-                            Ver detalles
-                          </Link>
+                          <Link href={`/shop/${producto._id}`} className="btn btn-success text-white">
+  Ver detalles
+</Link>
                         </div>
                       </div>
                       <div className="card-body text-center d-flex flex-column">
                         <div className="mb-3" style={{ minHeight: '72px' }}>
                           <Link 
-                            href={`/shop-single/${producto._id}`} 
+                            href={`/shop/${producto._id}`} 
                             className="h3 text-decoration-none d-block mb-2"
                           >
                             {producto.nombre}

@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation'; // Importa useRouter
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 export default function ProductosList({ slug }: { slug: string }) {
   const { data: session } = useSession();
+  const router = useRouter(); // Obtiene el router
   const [productos, setProductos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
@@ -17,6 +19,11 @@ export default function ProductosList({ slug }: { slug: string }) {
     if (!imagePath) return null;
     return `${API_BASE_URL}${imagePath}`;
   };
+
+  // Función para manejar el clic en la imagen
+const handleProductClick = (productoId: string) => {
+  router.push(`/shop/${productoId}`);
+};
 
   const agregarAlCarrito = async (productoId: string) => {
     try {
@@ -106,26 +113,27 @@ export default function ProductosList({ slug }: { slug: string }) {
         productos.map((producto) => (
           <div key={producto._id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div className="card h-100 border-0 shadow-sm d-flex flex-column">
-              <Link href={`/productos/${producto.slug}`} className="text-decoration-none">
-                <div className="position-relative" style={{ height: '250px', overflow: 'hidden' }}>
-                  {getProductImageUrl(producto.imagen) && (
-                    <img
-                      src={getProductImageUrl(producto.imagen)}
-                      alt={producto.nombre}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        console.warn('Imagen fallida:', producto.imagen);
-                      }}
-                    />
-                  )}
-                  {producto.destacado && (
-                    <span className="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 m-2 small rounded">
-                      Destacado
-                    </span>
-                  )}
-                </div>
-                <div className="card-body">
+              <div className="position-relative" style={{ height: '250px', overflow: 'hidden', cursor: 'pointer' }}
+                   onClick={() => handleProductClick(producto._id)}>
+                {getProductImageUrl(producto.imagen) && (
+                  <img
+                    src={getProductImageUrl(producto.imagen)}
+                    alt={producto.nombre}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      console.warn('Imagen fallida:', producto.imagen);
+                    }}
+                  />
+                )}
+                {producto.destacado && (
+                  <span className="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 m-2 small rounded">
+                    Destacado
+                  </span>
+                )}
+              </div>
+              <div className="card-body">
+                <Link href={`/productos/${producto.slug}`} className="text-decoration-none">
                   <h5 className="card-title text-dark">{producto.nombre}</h5>
                   <div className="d-flex justify-content-between align-items-center mt-3">
                     <span className="h5 text-success fw-bold">${producto.precio.toFixed(2)}</span>
@@ -141,8 +149,8 @@ export default function ProductosList({ slug }: { slug: string }) {
                       </div>
                     )}
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
               <div className="card-footer bg-transparent border-0 mt-auto">
                 <button 
                   onClick={(e) => {
