@@ -6,23 +6,22 @@ export async function middleware(req) {
   const token = await getToken({ req });
 
   const isAuthPage = ["/auth/login", "/auth/register"].includes(pathname);
+  const isPublicPage = ["/about", "/contact", "/", "/shop"].some(p => pathname.startsWith(p));
+  const isProtectedPage = !isPublicPage && !isAuthPage;
 
-  // ✅ Permitir rutas públicas
-  if (["/about", "/contact"].some((p) => pathname.startsWith(p))) {
-    return NextResponse.next();
-  }
-
-  // ✅ Si el usuario está logueado y quiere ir al login o register, lo rediriges al home o dashboard
+  // 1. Redirigir usuarios autenticados que intentan acceder a páginas de auth
   if (token && isAuthPage) {
-    return NextResponse.redirect(new URL("/", req.url)); // o "/admin/dashboard" si quieres
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // ✅ Si NO está autenticado y accede a rutas protegidas
-  if (!token && !isAuthPage) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+  // 2. Redirigir usuarios no autenticados que intentan acceder a páginas protegidas
+  if (!token && isProtectedPage) {
+    // Guardar la URL a la que intentaban acceder para redirigir después del login
+    const callbackUrl = encodeURIComponent(pathname);
+    return NextResponse.redirect(new URL(`/auth/login?callbackUrl=${callbackUrl}`, req.url));
   }
 
-  // ✅ Si intenta acceder a /admin pero no es admin
+  // 3. Verificar permisos de admin para rutas /admin
   if (pathname.startsWith("/admin") && token?.role !== "admin") {
     return NextResponse.redirect(new URL("/", req.url));
   }

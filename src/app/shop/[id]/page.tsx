@@ -357,33 +357,26 @@ export default function DetalleProducto() {
       {/* Contenido principal del producto */}
       <div className="container py-5">
         <div className="row gx-5">
-          {/* Sidebar de categorías */}
+          {/* Barra Lateral de Categorías */}
           <div className="col-lg-3">
-            <div className="card mb-4 border-0 shadow-sm">
-              <div className="card-header bg-success text-white">
-                <h5 className="mb-0">Categorías</h5>
-              </div>
-              <div className="card-body p-0">
-                <ul className="list-group list-group-flush">
-                  {categorias.map((categoria) => (
-                    <li 
-                      key={categoria._id} 
-                      className={`list-group-item border-0 ${producto.categoria?._id === categoria._id ? 'bg-light' : ''}`}
+            <h1 className="h2 pb-4">Categorías</h1>
+            <ul className="list-unstyled templatemo-accordion">
+              {categorias.length === 0 ? (
+                <li className="text-muted">No hay categorías registradas</li>
+              ) : (
+                categorias.map((categoria) => (
+                  <li key={categoria._id} className="pb-2">
+                    <Link
+                      className="d-flex justify-content-between h5 text-decoration-none"
+                      href={`/categorias/${categoria.slug}`}
                     >
-                      <Link 
-                        href={`/categorias/${categoria.slug || categoria._id}`} 
-                        className={`text-decoration-none d-block py-2 px-3 ${producto.categoria?._id === categoria._id ? 'text-success fw-bold' : 'text-dark'}`}
-                      >
-                        {categoria.nombre}
-                        {producto.categoria?._id === categoria._id && (
-                          <i className="fas fa-arrow-right ms-2 text-success"></i>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+                      {categoria.nombre}
+                      <i className="fa fa-fw fa-chevron-circle-right mt-1"></i>
+                    </Link>
+                  </li>
+                ))
+              )}
+            </ul>
           </div>
 
           {/* Contenido principal del producto */}
@@ -394,7 +387,7 @@ export default function DetalleProducto() {
                   <img
                     src={producto.imagen}
                     alt={producto.nombre}
-                    width={600}
+                    width={550}
                     height="auto"
                     style={{ objectFit: 'cover', borderRadius: '10px' }}
                   />

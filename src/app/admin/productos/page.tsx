@@ -4,9 +4,10 @@ import {
   Box, Typography, Button, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper, IconButton,
   Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Snackbar, Alert, Avatar, CircularProgress, MenuItem
+  TextField, Snackbar, Alert, Avatar, CircularProgress, MenuItem,
+  Card, CardContent, Grid, InputAdornment, Chip, Tooltip, FormControl, InputLabel, Select
 } from '@mui/material';
-import { Edit, Delete, Add, CloudUpload } from '@mui/icons-material';
+import { Edit, Delete, Add, CloudUpload, Search, Refresh, Inventory } from '@mui/icons-material';
 
 interface Producto {
   _id: string;
@@ -17,6 +18,7 @@ interface Producto {
   imagen: string;
   categoria: { _id: string, nombre: string };
   proveedor: { _id: string, nombre: string };
+  fechaCreacion: string;
 }
 
 interface Categoria {
@@ -49,6 +51,8 @@ export default function ProductosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategoria, setFilterCategoria] = useState('');
 
   const loadData = async () => {
     try {
@@ -202,6 +206,25 @@ export default function ProductosPage() {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
+  const filteredProductos = productos.filter(producto => {
+    const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategoria = !filterCategoria || producto.categoria._id === filterCategoria;
+    
+    return matchesSearch && matchesCategoria;
+  });
+
+  const getStockColor = (stock: number) => {
+    if (stock === 0) return 'error';
+    if (stock < 10) return 'warning';
+    return 'success';
+  };
+
+  const getStockText = (stock: number) => {
+    if (stock === 0) return 'Sin stock';
+    if (stock < 10) return 'Stock bajo';
+    return 'En stock';
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
@@ -225,6 +248,55 @@ export default function ProductosPage() {
         Nuevo Producto
       </Button>
 
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                placeholder="Buscar productos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel>Categoría</InputLabel>
+                <Select
+                  value={filterCategoria}
+                  label="Categoría"
+                  onChange={(e) => setFilterCategoria(e.target.value)}
+                >
+                  <MenuItem value="">Todas</MenuItem>
+                  {categorias.map((cat) => (
+                    <MenuItem key={cat._id} value={cat._id}>
+                      {cat.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<Refresh />}
+                onClick={loadData}
+              >
+                Actualizar
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -240,12 +312,17 @@ export default function ProductosPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {productos.map((producto) => (
+            {filteredProductos.map((producto) => (
               <TableRow key={producto._id}>
                 <TableCell>{producto.nombre}</TableCell>
                 <TableCell>{producto.descripcion}</TableCell>
                 <TableCell>${producto.precio.toFixed(2)}</TableCell>
-                <TableCell>{producto.stock}</TableCell>
+                <TableCell>
+                  <Chip 
+                    label={`${producto.stock} - ${getStockText(producto.stock)}`}
+                    color={getStockColor(producto.stock)}
+                  />
+                </TableCell>
                 <TableCell>{producto.categoria?.nombre || 'Sin categoría'}</TableCell>
                 <TableCell>{producto.proveedor?.nombre || 'Sin proveedor'}</TableCell>
                 <TableCell>
@@ -254,7 +331,7 @@ export default function ProductosPage() {
                     variant="rounded"
                     sx={{ width: 56, height: 56 }}
                   >
-                    {!producto.imagen && <CloudUpload />}
+                    {!producto.imagen && <Inventory />}
                   </Avatar>
                 </TableCell>
                 <TableCell>

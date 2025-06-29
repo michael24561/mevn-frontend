@@ -43,58 +43,73 @@ export default function PaginaTienda() {
     }
   };
 
-  const agregarAlCarrito = async (productoId: string) => {
-    try {
-      const producto = productos.find(p => p._id === productoId);
-      const productoNombre = producto?.nombre || 'producto';
+const agregarAlCarrito = async (productoId: string) => {
+  // Verificar si el usuario no está autenticado
+  if (status !== "authenticated") {
+    toast.error('Debes iniciar sesión para agregar productos al carrito', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    return;
+  }
 
-      const toastId = toast.loading(`Agregando ${productoNombre} al carrito...`);
+  try {
+    const producto = productos.find(p => p._id === productoId);
+    const productoNombre = producto?.nombre || 'producto';
 
-      const clienteId = session?.user?.id || 'admin';
+    const toastId = toast.loading(`Agregando ${productoNombre} al carrito...`);
 
-      const response = await fetch('http://localhost:5000/api/carritos/items', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productoId,
-          cantidad: 1,
-          clienteId
-        })
-      });
+    const clienteId = session?.user?.id || 'admin';
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al agregar al carrito');
-      }
+    const response = await fetch('http://localhost:5000/api/carritos/items', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productoId,
+        cantidad: 1,
+        clienteId
+      })
+    });
 
-      const data = await response.json();
-      setCartCount(prev => prev + 1);
-      
-      toast.update(toastId, {
-        render: `¡${productoNombre} agregado al carrito!`,
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-        closeButton: true,
-      });
-      
-      return data;
-    } catch (error) {
-      toast.error(error.message || 'Error al agregar al carrito', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      console.error('Error:', error);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al agregar al carrito');
     }
-  };
+
+    const data = await response.json();
+    setCartCount(prev => prev + 1);
+    
+    toast.update(toastId, {
+      render: `¡${productoNombre} agregado al carrito!`,
+      type: "success",
+      isLoading: false,
+      autoClose: 3000,
+      closeButton: true,
+    });
+    
+    return data;
+  } catch (error) {
+    toast.error(error.message || 'Error al agregar al carrito', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    console.error('Error:', error);
+  }
+};
 
   useEffect(() => {
     const cargarProductos = async () => {
@@ -482,57 +497,6 @@ export default function PaginaTienda() {
           </div>
         </div>
       </div>
-
-      {/* Sección de Marcas */}
-      <section className="bg-light py-5">
-        <div className="container my-4">
-          <div className="row text-center py-3">
-            <div className="col-lg-6 m-auto">
-              <h1 className="h1">Nuestras Marcas</h1>
-              <p>
-                Las mejores marcas internacionales de licores y destilados, seleccionadas para los paladares más exigentes.
-              </p>
-            </div>
-            <div className="col-lg-9 m-auto tempaltemo-carousel">
-              <div className="row d-flex flex-row">
-                <div className="col-1 align-self-center">
-                  <a className="h1" href="#brandCarousel" role="button" data-bs-slide="prev">
-                    <i className="text-light fas fa-chevron-left"></i>
-                  </a>
-                </div>
-
-                <div className="col">
-                  <div className="carousel slide carousel-multi-item pt-2 pt-md-0" id="brandCarousel" data-bs-ride="carousel">
-                    <div className="carousel-inner product-links-wap" role="listbox">
-                      <div className="carousel-item active">
-                        <div className="row">
-                          {[1, 2, 3, 4].map((brand) => (
-                            <div key={brand} className="col-3 p-md-5">
-                              <a href="#">
-                                <img 
-                                  className="img-fluid brand-img" 
-                                  src={`/assets/img/marca_0${brand}.png`} 
-                                  alt={`Marca ${brand}`} 
-                                />
-                              </a>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-1 align-self-center">
-                  <a className="h1" href="#brandCarousel" role="button" data-bs-slide="next">
-                    <i className="text-light fas fa-chevron-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-dark text-light" id="licores_footer">

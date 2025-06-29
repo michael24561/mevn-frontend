@@ -194,7 +194,7 @@ export default function PaginaCarrito() {
       <div className="container py-5 text-center">
         <h2>Debes iniciar sesión</h2>
         <p className="lead">Para ver tu carrito, por favor inicia sesión</p>
-        <Link href="/login" className="btn btn-success mt-3">
+        <Link href="/auth/login" className="btn btn-success mt-3">
           Iniciar sesión
         </Link>
       </div>
@@ -206,7 +206,7 @@ export default function PaginaCarrito() {
       <div className="container py-5 text-center">
         <h2>Tu carrito está vacío</h2>
         <p className="lead">Aún no has agregado productos a tu carrito</p>
-        <Link href="/tienda" className="btn btn-success mt-3">
+        <Link href="/shop" className="btn btn-success mt-3">
           Ir a la tienda
         </Link>
       </div>
