@@ -67,7 +67,7 @@ const agregarAlCarrito = async (productoId: string) => {
 
     const clienteId = session?.user?.id || 'admin';
 
-    const response = await fetch('http://localhost:5000/api/carritos/items', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos/items`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ const agregarAlCarrito = async (productoId: string) => {
   useEffect(() => {
     const cargarProductos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/productos');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/productos`);
         if (!response.ok) {
           throw new Error('Error al obtener los productos');
         }
@@ -122,7 +122,7 @@ const agregarAlCarrito = async (productoId: string) => {
 
         const cargarCategorias = async () => {
           try {
-            const response = await fetch('http://localhost:5000/api/categorias');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias`);
             if (!response.ok) throw new Error('Error al cargar categorías');
             const data = await response.json();
             setCategorias(data);
@@ -138,7 +138,7 @@ const agregarAlCarrito = async (productoId: string) => {
           imagen: producto.imagen 
             ? producto.imagen.startsWith('http') 
               ? producto.imagen 
-              : `http://localhost:5000${producto.imagen}`
+              : `${process.env.NEXT_PUBLIC_API_URL}${producto.imagen}`
             : '/assets/img/licor_default.jpg',
         }));
         
@@ -155,7 +155,7 @@ const agregarAlCarrito = async (productoId: string) => {
     if (status === "authenticated") {
       const cargarCarrito = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/carritos?clienteId=${session.user.id}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos?clienteId=${session.user.id}`);
           if (response.ok) {
             const data = await response.json();
             setCartCount(data.items?.length || 0);

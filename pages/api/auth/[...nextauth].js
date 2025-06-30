@@ -23,7 +23,7 @@ export const authOptions = {
             throw new Error("Email y contraseña son requeridos");
           }
 
-          const response = await fetch("http://localhost:5000/api/auth/login", {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
             method: "POST",
             body: JSON.stringify({
               email: credentials.email,

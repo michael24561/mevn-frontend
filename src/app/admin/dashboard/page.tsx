@@ -143,9 +143,9 @@ export default function DashboardPage() {
       
       // Cargar estadísticas desde el backend
       const [statsRes, ordersRes, productsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/dashboard/stats'),
-        fetch('http://localhost:5000/api/dashboard/recent-orders'),
-        fetch('http://localhost:5000/api/dashboard/top-products')
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/stats`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/recent-orders`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/top-products`)
       ]);
 
       if (statsRes.ok) {

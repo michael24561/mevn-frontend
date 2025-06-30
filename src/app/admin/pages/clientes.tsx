@@ -83,7 +83,7 @@ const ClientesPage: React.FC = () => {
   const fetchClientes = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/clientes');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/clientes`);
       if (response.ok) {
         const data = await response.json();
         setClientes(data);
@@ -129,8 +129,8 @@ const ClientesPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       const url = selectedCliente 
-        ? `http://localhost:5000/api/clientes/${selectedCliente._id}`
-        : 'http://localhost:5000/api/clientes';
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/clientes/${selectedCliente._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL}`;
       
       const method = selectedCliente ? 'PUT' : 'POST';
       
@@ -167,7 +167,7 @@ const ClientesPage: React.FC = () => {
     if (!selectedCliente) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/clientes/${selectedCliente._id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/clientes/${selectedCliente._id}`, {
         method: 'DELETE',
       });
 
@@ -192,7 +192,7 @@ const ClientesPage: React.FC = () => {
 
   const handleToggleActive = async (cliente: Cliente) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/clientes/${cliente._id}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/clientes/${cliente._id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

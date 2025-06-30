@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && echo 'No lint en producción'",
     "start": "next start",
     "lint": "next lint"
   },

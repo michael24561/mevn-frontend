@@ -58,9 +58,9 @@ export default function ProductosPage() {
     try {
       setIsLoading(true);
       const [productosRes, categoriasRes, proveedoresRes] = await Promise.all([
-        fetch('http://localhost:5000/api/productos'),
-        fetch('http://localhost:5000/api/categorias'),
-        fetch('http://localhost:5000/api/proveedores')
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/productos`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/proveedores`)
       ]);
 
       if (!productosRes.ok || !categoriasRes.ok || !proveedoresRes.ok) {
@@ -152,8 +152,8 @@ export default function ProductosPage() {
       }
 
       const url = currentProducto 
-        ? `http://localhost:5000/api/productos/${currentProducto._id}`
-        : 'http://localhost:5000/api/productos';
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/productos/${currentProducto._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/api/productos`;
       const method = currentProducto ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -188,7 +188,7 @@ export default function ProductosPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/productos/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/productos/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Error al eliminar');
       setSnackbar({ open: true, message: 'Producto eliminado', severity: 'success' });
       await loadData();

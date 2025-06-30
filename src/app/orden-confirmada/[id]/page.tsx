@@ -28,7 +28,7 @@ export default function OrdenConfirmadaPage() {
   const cargarVenta = async () => {
     try {
       // Cambia esta línea para usar la ruta correcta
-      const res = await fetch(`http://localhost:5000/api/ventas/${id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas/${id}`);
       
       // Agrega logs para debug
       console.log('Response status:', res.status);

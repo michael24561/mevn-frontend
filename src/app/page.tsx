@@ -25,7 +25,7 @@ export default function HomePage() {
     const fetchCategorias = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/categorias/destacadas?limit=3');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias/destacadas?limit=3`);
         
         if (!response.ok) {
           throw new Error('Error al obtener categorías destacadas');

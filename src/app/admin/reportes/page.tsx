@@ -87,7 +87,7 @@ const ReportesPage: React.FC = () => {
     const fetchVentas = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/ventas');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas`);
         setVentas(response.data.data);
       } catch (error) {
         setSnackbar({ 

@@ -73,7 +73,7 @@ const ProveedoresPage: React.FC = () => {
   const fetchProveedores = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/proveedores');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/proveedores`);
       if (response.ok) {
         const data = await response.json();
         setProveedores(data);
@@ -119,8 +119,8 @@ const ProveedoresPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       const url = selectedProveedor 
-        ? `http://localhost:5000/api/proveedores/${selectedProveedor._id}`
-        : 'http://localhost:5000/api/proveedores';
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/proveedores/${selectedProveedor._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/api/proveedores`;
       
       const method = selectedProveedor ? 'PUT' : 'POST';
       
@@ -157,7 +157,7 @@ const ProveedoresPage: React.FC = () => {
     if (!selectedProveedor) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/proveedores/${selectedProveedor._id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/proveedores/${selectedProveedor._id}`, {
         method: 'DELETE',
       });
 

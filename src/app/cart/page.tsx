@@ -44,7 +44,7 @@ export default function PaginaCarrito() {
 
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/carritos?clienteId=${session.user.id}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos?clienteId=${session.user.id}`);
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -71,7 +71,7 @@ export default function PaginaCarrito() {
 
     try {
       setProcesando(true);
-      const response = await fetch(`http://localhost:5000/api/carritos/items/${itemId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos/items/${itemId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -101,7 +101,7 @@ export default function PaginaCarrito() {
 
     try {
       setProcesando(true);
-      const response = await fetch(`http://localhost:5000/api/carritos/items/${itemId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos/items/${itemId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clienteId: session.user.id })
@@ -129,7 +129,7 @@ export default function PaginaCarrito() {
     try {
       setProcesando(true);
       // 1. Procesar la venta
-      const ventaResponse = await fetch('http://localhost:5000/api/ventas', {
+      const ventaResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -155,7 +155,7 @@ export default function PaginaCarrito() {
       }
 
       // 2. Vaciar el carrito actual
-      const vaciarResponse = await fetch('http://localhost:5000/api/carritos', {
+      const vaciarResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clienteId: session.user.id })
@@ -227,7 +227,7 @@ export default function PaginaCarrito() {
                     <img
                       src={
                         item.producto.imagen
-                          ? `http://localhost:5000${item.producto.imagen.startsWith('/') ? '' : '/'}${item.producto.imagen}`
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${item.producto.imagen.startsWith('/') ? '' : '/'}${item.producto.imagen}`
                           : '/imagenes/licor-default.jpg'
                       }
                       alt={item.producto.nombre}

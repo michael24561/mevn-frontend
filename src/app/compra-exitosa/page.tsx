@@ -41,7 +41,7 @@ export default function CompraExitosa() {
       }
 
       try {
-        const url = `http://localhost:5000/api/ventas/${ventaId}?clienteId=${session.user.id}`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/ventas/${ventaId}?clienteId=${session.user.id}`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -192,7 +192,7 @@ export default function CompraExitosa() {
                       <div className="d-flex align-items-center">
                         {item.producto.imagen && (
                           <img
-                            src={`http://localhost:5000${item.producto.imagen.startsWith('/') ? '' : '/'}${item.producto.imagen}`}
+                            src={`${process.env.NEXT_PUBLIC_API_URL}${item.producto.imagen.startsWith('/') ? '' : '/'}${item.producto.imagen}`}
                             alt={item.producto.nombre}
                             className="img-thumbnail me-3"
                             style={{ width: '50px', height: '50px', objectFit: 'cover' }}

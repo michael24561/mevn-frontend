@@ -46,26 +46,26 @@ export default function DetalleProducto() {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const productoResponse = await fetch(`http://localhost:5000/api/productos/${id}`);
+        const productoResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/productos/${id}`);
         if (!productoResponse.ok) {
           throw new Error('Producto no encontrado');
         }
         const productoData = await productoResponse.json();
         
-        const categoriasResponse = await fetch('http://localhost:5000/api/categorias');
+        const categoriasResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias`);
         const categoriasData = await categoriasResponse.json();
         
         setProducto({
           ...productoData,
           imagen: productoData.imagen.startsWith('http') 
             ? productoData.imagen 
-            : `http://localhost:5000${productoData.imagen}`
+            : `${process.env.NEXT_PUBLIC_API_URL}${productoData.imagen}`
         });
         
         setCategorias(categoriasData);
 
         if (session?.user?.id) {
-          const carritoResponse = await fetch(`http://localhost:5000/api/carritos?clienteId=${session.user.id}`);
+          const carritoResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos?clienteId=${session.user.id}`);
           if (carritoResponse.ok) {
             const carritoData = await carritoResponse.json();
             setCartCount(carritoData.items?.length || 0);
@@ -101,7 +101,7 @@ export default function DetalleProducto() {
         throw new Error('Debes iniciar sesión para agregar productos al carrito');
       }
 
-      const response = await fetch('http://localhost:5000/api/carritos/items', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carritos/items`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -402,7 +402,7 @@ export default function DetalleProducto() {
                           onClick={() => setProducto({...producto, imagen: img})}
                         >
                           <Image
-                            src={img.startsWith('http') ? img : `http://localhost:5000${img}`}
+                            src={img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_API_URL}${img}`}
                             alt={`Vista ${index + 1} de ${producto.nombre}`}
                             width={200}
                             height={200}

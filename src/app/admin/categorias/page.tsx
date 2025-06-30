@@ -38,7 +38,7 @@ export default function CategoriasPage() {
   const loadCategorias = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('http://localhost:5000/api/categorias');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias`);
       
       if (!res.ok) {
         throw new Error('Error al cargar categorías');
@@ -85,8 +85,8 @@ export default function CategoriasPage() {
 
     try {
       const url = currentCategoria 
-        ? `http://localhost:5000/api/categorias/${currentCategoria._id}`
-        : 'http://localhost:5000/api/categorias';
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/categorias/${currentCategoria._id}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/api/categorias`;
       const method = currentCategoria ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -125,7 +125,7 @@ export default function CategoriasPage() {
     if (!confirm('¿Estás seguro de eliminar esta categoría?')) return;
     
     try {
-      const res = await fetch(`http://localhost:5000/api/categorias/${id}`, { 
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias/${id}`, { 
         method: 'DELETE' 
       });
       
