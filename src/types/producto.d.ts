@@ -7,6 +7,7 @@ export interface Producto {
   stock: number;
   categoria: string; // En frontend se recibe como string (ObjectId serializado)
   proveedor: string;
+  role: string;
   imagen?: string; // URL de la imagen del producto
   // Campos poplados si usas .populate():
   categoria_nombre?: string; // Si haces populate
