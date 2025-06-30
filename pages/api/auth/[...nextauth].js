@@ -67,16 +67,17 @@ export const authOptions = {
     maxAge: 24 * 60 * 60, // 1 día de duración de sesión
   },
   callbacks: {
-  async session({ session, token }) {
-    session.user.role = token.role; // <--- agrega el campo
-    return session;
-  },
-  async jwt({ token, user }) {
-    if (user) {
-      token.role = user.role; // <--- viene de DB o auth provider
-    }
-    return token;
-  },
+    async jwt({ token, user }) {
+      // Persistir datos en el token JWT
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.telefono = user.telefono;
+        token.direccion = user.direccion;
+        token.accessToken = user.token;
+      }
+      return token;
+    },
     async session({ session, token }) {
       // Enviar propiedades necesarias al cliente
       if (token) {
