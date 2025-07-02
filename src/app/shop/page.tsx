@@ -227,9 +227,19 @@ const agregarAlCarrito = async (productoId: string) => {
       {/* Barra principal */}
       <nav className="navbar navbar-expand-lg navbar-light shadow">
         <div className="container d-flex justify-content-between align-items-center">
-          <Link className="navbar-brand text-success logo h1 align-self-center" href="/">
-            Licores<span className="text-light">Deluxe</span>
-          </Link>
+          <Link className="navbar-brand text-success logo h1 align-self-center d-flex align-items-center" href="/">
+  <img 
+    src="/assets/img/logo_licoreria.jpeg" 
+    alt="Licores Deluxe Logo" 
+    width="40" 
+    height="40" 
+    className="rounded-circle me-2"
+    style={{ objectFit: 'cover' }}
+  />
+  <span>
+    Licores<span className="text-light">Deluxe</span>
+  </span>
+</Link>
 
           <button 
             className="navbar-toggler border-0" 

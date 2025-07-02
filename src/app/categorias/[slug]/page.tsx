@@ -8,7 +8,7 @@ const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5000';
 // Función para obtener datos de la categoría
 async function getCategoria(slug: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/categorias/slug/${slug}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias/slug/${slug}`, {
       next: { revalidate: 60 }
     });
 
@@ -23,7 +23,7 @@ async function getCategoria(slug: string) {
 // Función para obtener todas las categorías
 async function getCategorias() {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/categorias`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias`, {
       next: { revalidate: 60 }
     });
     if (!res.ok) return [];
