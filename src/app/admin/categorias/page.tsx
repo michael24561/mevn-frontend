@@ -5,8 +5,9 @@ import {
   TableContainer, TableHead, TableRow, Paper, IconButton,
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Snackbar, Alert, CircularProgress,
-  Avatar, Chip, Card, CardContent, Grid
+  Avatar, Chip, Card, CardContent
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -27,7 +28,7 @@ export default function CategoriasPage() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCategoria, setCurrentCategoria] = useState<Categoria | null>(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'info' | 'warning' | 'error' }>({ open: false, message: '', severity: 'success' });
   const [formState, setFormState] = useState({
     nombre: '',
     descripcion: '',
