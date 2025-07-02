@@ -113,10 +113,7 @@ const AccountPage = () => {
             color: 'white',
             padding: '10px 20px',
             borderRadius: '4px',
-            textDecoration: 'none',
-            '&:hover': {
-              backgroundColor: '#4a8c5a'
-            }
+            textDecoration: 'none'
           }}
         >
           Iniciar sesión
