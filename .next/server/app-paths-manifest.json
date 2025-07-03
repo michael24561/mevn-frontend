@@ -1,8 +1,11 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
   "/(public)/about/page": "app/(public)/about/page.js",
   "/shop/page": "app/shop/page.js",
-  "/admin/clientes/page": "app/admin/clientes/page.js",
-  "/admin/dashboard/page": "app/admin/dashboard/page.js",
-  "/admin/proveedores/page": "app/admin/proveedores/page.js"
+  "/categorias/[slug]/page": "app/categorias/[slug]/page.js",
+  "/(public)/contact/page": "app/(public)/contact/page.js",
+  "/account/page": "app/account/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js"
 }

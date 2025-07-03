@@ -97,7 +97,8 @@ const agregarAlCarrito = async (productoId: string) => {
     
     return data;
   } catch (error) {
-    toast.error(error.message || 'Error al agregar al carrito', {
+    const errorMessage = (error instanceof Error && error.message) ? error.message : 'Error al agregar al carrito';
+    toast.error(errorMessage, {
       position: "bottom-right",
       autoClose: 5000,
       hideProgressBar: false,

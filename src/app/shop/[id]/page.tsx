@@ -5,6 +5,32 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
+
+// Extiende el tipo de usuario de la sesión para incluir 'id'
+import "next-auth";
+
+declare module "next-auth" {
+  interface User {
+    id: string;
+    direccion?: any;
+    telefono?: any;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    role?: string | null;
+  }
+  interface Session {
+    user: {
+      id: any;
+      direccion: any;
+      telefono: any;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      role?: string | null;
+    };
+  }
+}
 import Head from 'next/head';
 import { toast } from 'react-toastify';
 
@@ -34,7 +60,8 @@ interface Categoria {
 }
 
 export default function DetalleProducto() {
-  const { id } = useParams();
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
   const { data: session } = useSession();
   const [producto, setProducto] = useState<Producto | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);

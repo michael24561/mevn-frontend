@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Box,
-  Grid,
   Card,
   CardContent,
   Typography,
@@ -18,8 +17,10 @@ import {
   Divider,
   Chip,
   IconButton,
-  CircularProgress
+  CircularProgress,
+
 } from '@mui/material';
+import { Grid } from '@mui/material';
 import {
   ShoppingCart as VentasIcon,
   People as ClienteIcon,
@@ -192,11 +193,11 @@ export default function DashboardPage() {
                     <VentasIcon />
                   </Avatar>
                   <Chip 
-                    label={`${stats?.ventas.cambio > 0 ? '+' : ''}${stats?.ventas.cambio}%`}
+                    label={`${(stats?.ventas.cambio ?? 0) > 0 ? '+' : ''}${stats?.ventas.cambio ?? 0}%`}
                     size="small"
                     sx={{
-                      backgroundColor: stats?.ventas.cambio >= 0 ? '#d4edda' : '#f8d7da',
-                      color: stats?.ventas.cambio >= 0 ? '#155724' : '#721c24',
+                      backgroundColor: (stats?.ventas.cambio ?? 0) >= 0 ? '#d4edda' : '#f8d7da',
+                      color: (stats?.ventas.cambio ?? 0) >= 0 ? '#155724' : '#721c24',
                       fontSize: '0.75rem',
                       fontWeight: '600'
                     }}
@@ -236,11 +237,11 @@ export default function DashboardPage() {
                     <ClienteIcon />
                   </Avatar>
                   <Chip 
-                    label={`${stats?.clientes.cambio > 0 ? '+' : ''}${stats?.clientes.cambio}%`}
+                    label={`${(stats?.clientes.cambio ?? 0) > 0 ? '+' : ''}${stats?.clientes.cambio ?? 0}%`}
                     size="small"
                     sx={{
-                      backgroundColor: stats?.clientes.cambio >= 0 ? '#d4edda' : '#f8d7da',
-                      color: stats?.clientes.cambio >= 0 ? '#155724' : '#721c24',
+                      backgroundColor: (stats?.clientes.cambio ?? 0) >= 0 ? '#d4edda' : '#f8d7da',
+                      color: (stats?.clientes.cambio ?? 0) >= 0 ? '#155724' : '#721c24',
                       fontSize: '0.75rem',
                       fontWeight: '600'
                     }}
@@ -280,11 +281,11 @@ export default function DashboardPage() {
                     <ProductosIcon />
                   </Avatar>
                   <Chip 
-                    label={`${stats?.productos.cambio > 0 ? '+' : ''}${stats?.productos.cambio}%`}
+                    label={`${(stats?.productos.cambio ?? 0) > 0 ? '+' : ''}${stats?.productos.cambio ?? 0}%`}
                     size="small"
                     sx={{
-                      backgroundColor: stats?.productos.cambio >= 0 ? '#d4edda' : '#f8d7da',
-                      color: stats?.productos.cambio >= 0 ? '#155724' : '#721c24',
+                      backgroundColor: (stats?.productos.cambio ?? 0) >= 0 ? '#d4edda' : '#f8d7da',
+                      color: (stats?.productos.cambio ?? 0) >= 0 ? '#155724' : '#721c24',
                       fontSize: '0.75rem',
                       fontWeight: '600'
                     }}

@@ -227,7 +227,6 @@ const ProveedoresPage: React.FC = () => {
               <TableCell>Contacto</TableCell>
               <TableCell>Teléfono</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Estado</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>

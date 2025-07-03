@@ -16,19 +16,19 @@ import {
   Visibility as ViewIcon
 } from '@mui/icons-material';
 
-interface Categoria {
-  _id: string;
-  nombre: string;
-  descripcion: string;
-  imagen?: string;
-  productosCount?: number;
-}
+// interface Categoria {
+//   _id: string;
+//   nombre: string;
+//   descripcion: string;
+//   imagen?: string;
+//   productosCount?: number;
+// }
 
 export default function CategoriasPage() {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [categorias, setCategorias] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentCategoria, setCurrentCategoria] = useState<Categoria | null>(null);
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'info' | 'warning' | 'error' }>({ open: false, message: '', severity: 'success' });
+  const [currentCategoria, setCurrentCategoria] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [formState, setFormState] = useState({
     nombre: '',
     descripcion: '',
@@ -63,7 +63,7 @@ export default function CategoriasPage() {
     loadCategorias();
   }, []);
 
-  const handleOpenDialog = (categoria: Categoria | null) => {
+  const handleOpenDialog = (categoria) => {
     if (categoria) {
       setCurrentCategoria(categoria);
       setFormState({
@@ -80,7 +80,7 @@ export default function CategoriasPage() {
     setOpenDialog(true);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -122,7 +122,7 @@ export default function CategoriasPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id) => {
     if (!confirm('¿Estás seguro de eliminar esta categoría?')) return;
     
     try {

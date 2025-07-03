@@ -5,8 +5,9 @@ import {
   TableContainer, TableHead, TableRow, Paper, IconButton,
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Snackbar, Alert, Avatar, CircularProgress, MenuItem,
-  Card, CardContent, Grid, InputAdornment, Chip, Tooltip, FormControl, InputLabel, Select
+  Card, CardContent, InputAdornment, Chip, Tooltip, FormControl, InputLabel, Select
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Edit, Delete, Add, CloudUpload, Search, Refresh, Inventory } from '@mui/icons-material';
 
 interface Producto {
@@ -37,7 +38,7 @@ export default function ProductosPage() {
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentProducto, setCurrentProducto] = useState<Producto | null>(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'info' | 'warning' | 'error' }>({ open: false, message: '', severity: 'success' });
   const [formState, setFormState] = useState({
     nombre: '',
     descripcion: '',

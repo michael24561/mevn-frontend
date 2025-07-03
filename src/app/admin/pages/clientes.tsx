@@ -23,7 +23,6 @@ import {
   Alert,
   Snackbar,
   Tooltip,
-  Grid,
   InputAdornment,
   Avatar,
   LinearProgress,
@@ -32,6 +31,7 @@ import {
   FormControlLabel,
   Switch
 } from '@mui/material';
+import { Grid } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -55,7 +55,7 @@ interface Cliente {
   activo: boolean;
 }
 
-const ClientesPage: React.FC = () => {
+const ClientesPage = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -63,10 +63,14 @@ const ClientesPage: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCliente, setSelectedCliente] = useState<Cliente | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [snackbar, setSnackbar] = useState({ 
+  const [snackbar, setSnackbar] = useState<{ 
+    open: boolean; 
+    message: string; 
+    severity: 'success' | 'info' | 'warning' | 'error';
+  }>({ 
     open: false, 
     message: '', 
-    severity: 'success' as 'success' | 'error' 
+    severity: 'success'
   });
   const [formData, setFormData] = useState({
     nombre: '',

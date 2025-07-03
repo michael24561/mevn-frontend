@@ -137,6 +137,9 @@ export default function CompraExitosa() {
     );
   }
 
+  // Obtener dirección de la venta o de la sesión
+  const direccionCliente = venta?.cliente?.direccion || session?.user?.direccion;
+
   return (
     <div className="container py-5">
       <div className="card border-success" ref={facturaRef}>
@@ -163,9 +166,11 @@ export default function CompraExitosa() {
           <div className="row mb-4">
             <div className="col-md-6">
               <h4>Licorería Premium</h4>
-              <p className="mb-1">Calle Falsa 123, Ciudad</p>
-              <p className="mb-1">Teléfono: (123) 456-7890</p>
-              <p className="mb-1">NIT: 123456789-0</p>
+              {direccionCliente ? (
+                <p className="mb-1">Dirección: {direccionCliente}</p>
+              ) : (
+                <p className="mb-1 text-muted">Dirección no especificada</p>
+              )}
             </div>
             <div className="col-md-6 text-md-end">
               <h4>Factura #{venta.codigoVenta || venta._id.substring(18, 24).toUpperCase()}</h4>
@@ -186,7 +191,7 @@ export default function CompraExitosa() {
                 </tr>
               </thead>
               <tbody>
-                {venta.items.map((item) => (
+                {venta.items.map((item: any) => (
                   <tr key={item.producto._id}>
                     <td>
                       <div className="d-flex align-items-center">
@@ -226,8 +231,8 @@ export default function CompraExitosa() {
                   <h5 className="mb-0">Método de Pago</h5>
                 </div>
                 <div className="card-body">
-                  <p className="mb-1"><strong>Tipo:</strong> Efectivo</p>
-                  <p className="mb-0"><strong>Estado:</strong> En proceso</p>
+                  <p className="mb-1"><strong>Tipo:</strong> {venta.metodoPago || 'Efectivo'}</p>
+                  <p className="mb-0"><strong>Estado:</strong> {venta.estado || 'En proceso'}</p>
                 </div>
               </div>
             </div>
@@ -237,7 +242,7 @@ export default function CompraExitosa() {
                   <h5 className="mb-0">Información Adicional</h5>
                 </div>
                 <div className="card-body">
-                  <p className="mb-1"><strong>N° de Transacción:</strong> {venta._id.substring(10, 18).toUpperCase()}</p>
+                  <p className="mb-1"><strong>N° de Transacción:</strong> {venta._id.substring(0, 8).toUpperCase()}</p>
                   <p className="mb-0"><strong>Email de confirmación enviado a:</strong> {venta.cliente.email}</p>
                 </div>
               </div>
