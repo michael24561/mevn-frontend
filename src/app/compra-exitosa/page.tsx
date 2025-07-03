@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -9,6 +12,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { toast } from 'react-toastify';
 
+
 export default function CompraExitosa() {
   const [venta, setVenta] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -17,6 +21,8 @@ export default function CompraExitosa() {
   const searchParams = useSearchParams();
   const ventaId = searchParams?.get('id');
   const facturaRef = useRef<HTMLDivElement>(null);
+
+  
 
   useEffect(() => {
     const obtenerVenta = async () => {
