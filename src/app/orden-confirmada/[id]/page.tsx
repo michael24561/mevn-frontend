@@ -19,7 +19,8 @@ interface Venta {
 }
 
 export default function OrdenConfirmadaPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string | undefined;
   const router = useRouter();
   const [venta, setVenta] = useState<Venta | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,7 +41,10 @@ export default function OrdenConfirmadaPage() {
       setVenta(data.data);
     } catch (error) {
       console.error('Error completo:', error);
-      toast.error(error.message);
+      const errorMessage = typeof error === 'object' && error !== null && 'message' in error
+        ? (error as { message: string }).message
+        : 'Error al cargar la orden';
+      toast.error(errorMessage);
       router.push('/');
     }
   };
