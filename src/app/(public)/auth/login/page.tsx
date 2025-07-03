@@ -94,10 +94,6 @@ export default function LoginPage() {
               Recuérdame
             </label>
           </div>
-
-          <Link href="/auth/forgot-password" className="auth-link text-sm">
-            ¿Olvidaste tu contraseña?
-          </Link>
         </div>
 
         <button
