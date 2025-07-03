@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProductosList from './ProductosList';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from 'react';
 
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5000';
 
@@ -120,7 +121,7 @@ export default async function CategoriaPage({
               {categorias.length === 0 ? (
                 <li className="text-muted">No hay categorías registradas</li>
               ) : (
-                categorias.map((categoria) => (
+                categorias.map((categoria: { _id: Key | null | undefined; slug: any; nombre: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
                   <li key={categoria._id} className="pb-2">
                     <Link
                       className="d-flex justify-content-between h5 text-decoration-none"
