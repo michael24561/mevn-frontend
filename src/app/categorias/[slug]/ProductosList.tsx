@@ -117,7 +117,7 @@ const handleProductClick = (productoId: string) => {
                    onClick={() => handleProductClick(producto._id)}>
                 {getProductImageUrl(producto.imagen) && (
                   <img
-                    src={getProductImageUrl(producto.imagen)}
+                    src={getProductImageUrl(producto.imagen) || undefined}
                     alt={producto.nombre}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={(e) => {
