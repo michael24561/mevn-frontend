@@ -24,15 +24,22 @@ export default function LoginPage() {
 
     setIsLoading(false);
 
-    if (result?.error) {
-      setError(result.error === "CredentialsSignin" ? "Credenciales inválidas" : "Error al iniciar sesión");
+    if (!result) {
+      setError("Ocurrió un error inesperado. Intenta de nuevo.");
       return;
     }
 
-    // Redirección simplificada - NextAuth ya maneja la sesión
-    if (result?.url) {
-      router.push(result.url);
+    if (result.error) {
+      setError(
+        result.error === "CredentialsSignin"
+          ? "Correo o contraseña incorrectos. Verifica tus datos."
+          : "Error al iniciar sesión. Intenta nuevamente."
+      );
+      return;
     }
+
+    // Redirigir siempre a la raíz después de iniciar sesión correctamente
+    router.push("/");
   };
 
   return (
@@ -98,12 +105,12 @@ export default function LoginPage() {
           disabled={isLoading}
           className="auth-button"
         >
-          {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+          {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
         </button>
       </form>
 
       <div className="auth-footer">
-        ¿No tienes una cuenta?{' '}
+        ¿No tienes una cuenta?{" "}
         <Link href="/auth/register" className="auth-link">
           Regístrate
         </Link>
