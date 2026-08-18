@@ -43,6 +43,10 @@ export default function PaginaTienda() {
     }
   };
 
+  const isAdminUser = ['admin', 'administrador', 'super_admin'].includes(
+    String(session?.user?.role ?? '').toLowerCase()
+  );
+
 const agregarAlCarrito = async (productoId: string) => {
   // Verificar si el usuario no está autenticado
   if (status !== "authenticated") {
@@ -225,132 +229,82 @@ const agregarAlCarrito = async (productoId: string) => {
         </div>
       </nav>
 
-      {/* Barra principal */}
-      <nav className="navbar navbar-expand-lg navbar-light shadow">
-        <div className="container d-flex justify-content-between align-items-center">
-          <Link className="navbar-brand text-success logo h1 align-self-center d-flex align-items-center" href="/">
-  <img 
-    src="/assets/img/logo_licoreria.jpeg" 
-    alt="Licores Deluxe Logo" 
-    width="40" 
-    height="40" 
-    className="rounded-circle me-2"
-    style={{ objectFit: 'cover' }}
-  />
-  <span>
-    Licores<span className="text-light">Deluxe</span>
-  </span>
-</Link>
-
-          <button 
-            className="navbar-toggler border-0" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarContent"
-            aria-controls="navbarContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="navbarContent">
-            <div className="flex-fill">
-              <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                <li className="nav-item">
-                  <Link className="nav-link" href="/">Inicio</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href="/about">Nosotros</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link active" href="/shop">Productos</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href="/contact">Contacto</Link>
-                </li>
-              </ul>
+      <header className="luxury-header">
+        <div className="topbar">
+          <div className="container topbar-inner">
+            <div className="topbar-group">
+              <span><i className="fa fa-envelope"></i> info@licoresdeluxe.com</span>
+              <span><i className="fa fa-phone"></i> +34 911 234 567</span>
             </div>
-            
-            <div className="navbar align-self-center d-flex">
-              <div className="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                <div className="input-group">
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="inputMobileSearch" 
-                    placeholder="Buscar licores..." 
-                  />
-                  <div className="input-group-text">
-                    <i className="fa fa-fw fa-search"></i>
-                  </div>
-                </div>
-              </div>
-              
-              <a className="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                <i className="fa fa-fw fa-search text-dark mr-2"></i>
-              </a>
-              
-              <Link className="nav-icon position-relative text-decoration-none" href="/cart">
-                <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">{cartCount}</span>
-              </Link>
-
-              {status === "authenticated" ? (
-                <div className="dropdown ms-3">
-                  <button
-                    className="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    id="userDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    {session.user?.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt="User profile"
-                        width={32}
-                        height={32}
-                        className="rounded-circle me-2"
-                      />
-                    ) : (
-                      <i className="fa fa-user-circle me-2"></i>
-                    )}
-                    <span className="d-none d-lg-inline">{session.user?.name || 'Mi cuenta'}</span>
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li>
-                      <Link className="dropdown-item" href="/account">
-                        <i className="fa fa-user me-2"></i> Mi perfil
-                      </Link>
-                    </li>
-                    {session.user?.role === 'admin' && (
-                      <li>
-                        <Link className="dropdown-item" href="/admin/dashboard">
-                          <i className="fa fa-cog me-2"></i> Panel Admin
-                        </Link>
-                      </li>
-                    )}
-                    <li><hr className="dropdown-divider" /></li>
-                    <li>
-                      <button
-                        className="dropdown-item text-danger"
-                        onClick={handleLogout}
-                      >
-                        <i className="fa fa-sign-out me-2"></i> Cerrar sesión
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : (
-                <Link className="nav-link" href="/auth/login">
-                  <i className="fa fa-user me-2"></i> Iniciar sesión
-                </Link>
-              )}
+            <div className="topbar-group">
+              <span>Envíos en 24/48h | Garantía de autenticidad</span>
             </div>
           </div>
         </div>
-      </nav>
+
+        <nav className="navbar navbar-expand-lg luxury-navbar">
+          <div className="container navbar-inner">
+            <Link className="navbar-brand luxury-brand" href="/">
+              <span className="brand-mark">LD</span>
+              <span>Licores <strong>Deluxe</strong></span>
+            </Link>
+
+            <div className="collapse navbar-collapse" id="navbarContent">
+              <ul className="navbar-nav mx-auto luxury-nav">
+                <li className="nav-item"><Link className="nav-link" href="/">Inicio</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/about">Nosotros</Link></li>
+                <li className="nav-item"><Link className="nav-link active" href="/shop">Productos</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/contact">Contacto</Link></li>
+              </ul>
+
+              <div className="luxury-userbar">
+                <Link href="/cart" className="luxury-icon" aria-label="Carrito">
+                  <i className="fa fa-shopping-cart"></i>
+                  <span className="cart-count">{cartCount}</span>
+                </Link>
+
+                {status === 'authenticated' ? (
+                  <div className="dropdown ms-3">
+                    <button
+                      className="btn luxury-account-button dropdown-toggle"
+                      type="button"
+                      id="userDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      title={session.user?.name || 'Mi cuenta'}
+                    >
+                      {session.user?.image ? (
+                        <Image
+                          src={session.user.image}
+                          alt="User profile"
+                          width={30}
+                          height={30}
+                          className="rounded-circle me-2"
+                        />
+                      ) : (
+                        <i className="fa fa-user-circle me-2"></i>
+                      )}
+                      <span className="user-button-label">{session.user?.name || 'Mi cuenta'}</span>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end luxury-user-menu">
+                      <li><Link className="dropdown-item" href="/account"><i className="fa fa-user me-2"></i> Mi perfil</Link></li>
+                      {isAdminUser && (
+                        <li><Link className="dropdown-item" href="/admin/dashboard"><i className="fa fa-cog me-2"></i> Panel Admin</Link></li>
+                      )}
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><button className="dropdown-item text-danger" onClick={handleLogout}><i className="fa fa-sign-out me-2"></i> Cerrar sesión</button></li>
+                    </ul>
+                  </div>
+                ) : (
+                  <Link className="luxury-login" href="/auth/login">
+                    <i className="fa fa-user me-2"></i> Iniciar sesión
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
 
       {/* Modal de Búsqueda */}
       <div className="modal fade bg-white" id="templatemo_search" tabIndex={-1} role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
@@ -369,142 +323,77 @@ const agregarAlCarrito = async (productoId: string) => {
         </div>
       </div>
 
-      {/* Contenido principal de la tienda */}
-      <div className="container py-5">
-        <div className="row">
-          {/* Barra Lateral de Categorías */}
-          <div className="col-lg-3">
-            <h1 className="h2 pb-4">Categorías</h1>
-            <ul className="list-unstyled templatemo-accordion">
+      <div className="shop-shell">
+        <section className="shop-page-hero">
+          <div className="container py-5">
+            <div className="shop-toolbar">
+              <h2>Catálogo premium</h2>
+              <span className="badge">{productos.length} productos</span>
+            </div>
+          </div>
+        </section>
+
+        <div className="container shop-layout">
+          <aside className="shop-sidebar">
+            <h3>Categorías</h3>
+            <ul className="sidebar-list">
               {categorias.length === 0 ? (
-                <li className="text-muted">No hay categorías registradas</li>
+                <li className="empty-state">No hay categorías registradas</li>
               ) : (
                 categorias.map((categoria) => (
-                  <li key={categoria._id} className="pb-2">
-                    <Link
-                      className="d-flex justify-content-between h5 text-decoration-none"
-                      href={`/categorias/${categoria.slug}`}
-                    >
-                      {categoria.nombre}
-                      <i className="fa fa-fw fa-chevron-circle-right mt-1"></i>
-                    </Link>
+                  <li key={categoria._id}>
+                    <button type="button" className="active">
+                      <span>{categoria.nombre}</span>
+                      <i className="fa fa-chevron-right"></i>
+                    </button>
                   </li>
                 ))
               )}
             </ul>
-          </div>
+          </aside>
 
-          {/* Listado de Productos */}
-          <div className="col-lg-9">
-            <div className="row">
-              <div className="col-md-6">
-                <ul className="list-inline shop-top-menu pb-3 pt-1">
-                  <li className="list-inline-item">
-                    <Link className="h3 text-dark text-decoration-none mr-3" href="#">Todos</Link>
-                  </li>
-                  <li className="list-inline-item">
-                    <Link className="h3 text-dark text-decoration-none mr-3" href="#">Destilados</Link>
-                  </li>
-                  <li className="list-inline-item">
-                    <Link className="h3 text-dark text-decoration-none" href="#">Licores</Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-md-6 pb-4">
-                <div className="d-flex">
-                  <select className="form-control">
-                    <option>Destacados</option>
-                    <option>Precio: Menor a Mayor</option>
-                    <option>Precio: Mayor a Menor</option>
-                    <option>Novedades</option>
-                  </select>
-                </div>
-              </div>
+          <div className="shop-content">
+            <div className="shop-toolbar">
+              <h2>Todos los licores</h2>
+              <span className="badge">Destacados</span>
             </div>
 
-            {/* Cuadrícula de Productos */}
             {productos.length === 0 ? (
-              <div className="alert alert-warning text-center">
-                No hay productos disponibles
-              </div>
+              <div className="empty-state">No hay productos disponibles</div>
             ) : (
-              <div className="row">
+              <div className="product-grid">
                 {productos.map((producto) => (
-                  <div key={producto._id} className="col-md-4 mb-4">
-                    <div className="card mb-4 product-wap rounded-0 h-100 d-flex flex-column">
-                      <div className="card rounded-0 position-relative">
-                        <img 
-                          className="card-img rounded-0 img-fluid" 
-                          src={producto.imagen} 
-                          alt={producto.nombre}
-                          style={{ height: '300px', objectFit: 'cover' }}
-                        />
-                        <div className="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                          <Link href={`/shop/${producto._id}`} className="btn btn-success text-white">
-  Ver detalles
-</Link>
-                        </div>
+                  <article key={producto._id} className="product-card">
+                    <div className="product-card-image">
+                      <img src={producto.imagen} alt={producto.nombre} />
+                    </div>
+
+                    <div className="product-card-body">
+                      <div className="product-meta">
+                        <span>{producto.categoria?.nombre || 'Licores'}</span>
+                        <span>Stock {producto.stock}</span>
                       </div>
-                      <div className="card-body text-center d-flex flex-column">
-                        <div className="mb-3" style={{ minHeight: '72px' }}>
-                          <Link 
-                            href={`/shop/${producto._id}`} 
-                            className="h3 text-decoration-none d-block mb-2"
-                          >
-                            {producto.nombre}
-                          </Link>
-                          <ul className="w-100 list-unstyled d-flex justify-content-between mb-2">
-                            <li>Stock: {producto.stock}</li>
-                            {producto.categoria && (
-                              <li className="text-muted">{producto.categoria.nombre}</li>
-                            )}
-                          </ul>
-                          <p className="text-center mb-3 h4">${producto.precio.toFixed(2)}</p>
-                        </div>
-                        
-                        <div className="mt-auto">
-                          <button 
-                            onClick={() => agregarAlCarrito(producto._id)}
-                            className="btn btn-success w-100"
-                            disabled={producto.stock <= 0}
-                            style={{
-                              transition: 'all 0.3s ease',
-                              transform: 'scale(1)'
-                            }}
-                            onMouseDown={(e) => {
-                              e.currentTarget.style.transform = 'scale(0.95)';
-                            }}
-                            onMouseUp={(e) => {
-                              e.currentTarget.style.transform = 'scale(1)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = 'scale(1)';
-                            }}
-                          >
-                            {producto.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
-                          </button>
-                        </div>
+
+                      <h3>{producto.nombre}</h3>
+                      <div className="product-price">${producto.precio.toFixed(2)}</div>
+
+                      <div className="product-actions">
+                        <Link href={`/shop/${producto._id}`} className="btn luxury-button secondary ghost-button">
+                          Ver detalle
+                        </Link>
+                        <button
+                          onClick={() => agregarAlCarrito(producto._id)}
+                          className="btn luxury-button primary"
+                          disabled={producto.stock <= 0}
+                        >
+                          {producto.stock <= 0 ? 'Sin stock' : 'Comprar'}
+                        </button>
                       </div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             )}
-
-            {/* Paginación */}
-            <div className="row">
-              <ul className="pagination pagination-lg justify-content-end">
-                <li className="page-item disabled">
-                  <a className="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#" tabIndex={-1}>1</a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="#">2</a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark" href="#">3</a>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>

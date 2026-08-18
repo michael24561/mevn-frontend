@@ -118,6 +118,10 @@ export default function DetalleProducto() {
     }
   };
 
+  const isAdminUser = ['admin', 'administrador', 'super_admin'].includes(
+    String(session?.user?.role ?? '').toLowerCase()
+  );
+
   const agregarAlCarrito = async () => {
     if (!producto) return;
 
@@ -247,122 +251,82 @@ export default function DetalleProducto() {
         </div>
       </nav>
 
-      {/* Barra principal */}
-      <nav className="navbar navbar-expand-lg navbar-light shadow">
-        <div className="container d-flex justify-content-between align-items-center">
-          <Link className="navbar-brand text-success logo h1 align-self-center" href="/">
-            Licores<span className="text-light">Deluxe</span>
-          </Link>
-
-          <button 
-            className="navbar-toggler border-0" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarContent"
-            aria-controls="navbarContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="navbarContent">
-            <div className="flex-fill">
-              <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                <li className="nav-item">
-                  <Link className="nav-link" href="/">Inicio</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href="/about">Nosotros</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link active" href="/shop">Productos</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href="/contact">Contacto</Link>
-                </li>
-              </ul>
+      <header className="luxury-header">
+        <div className="topbar">
+          <div className="container topbar-inner">
+            <div className="topbar-group">
+              <span><i className="fa fa-envelope"></i> info@licoresdeluxe.com</span>
+              <span><i className="fa fa-phone"></i> +34 911 234 567</span>
             </div>
-            
-            <div className="navbar align-self-center d-flex">
-              <div className="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                <div className="input-group">
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="inputMobileSearch" 
-                    placeholder="Buscar licores..." 
-                  />
-                  <div className="input-group-text">
-                    <i className="fa fa-fw fa-search"></i>
-                  </div>
-                </div>
-              </div>
-              
-              <a className="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                <i className="fa fa-fw fa-search text-dark mr-2"></i>
-              </a>
-              
-              <Link className="nav-icon position-relative text-decoration-none" href="/cart">
-                <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">{cartCount}</span>
-              </Link>
-
-              {session ? (
-                <div className="dropdown ms-3">
-                  <button
-                    className="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    id="userDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    {session.user?.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt="User profile"
-                        width={32}
-                        height={32}
-                        className="rounded-circle me-2"
-                      />
-                    ) : (
-                      <i className="fa fa-user-circle me-2"></i>
-                    )}
-                    <span className="d-none d-lg-inline">{session.user?.name || 'Mi cuenta'}</span>
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li>
-                      <Link className="dropdown-item" href="/account">
-                        <i className="fa fa-user me-2"></i> Mi perfil
-                      </Link>
-                    </li>
-                    {session.user?.role === 'admin' && (
-                      <li>
-                        <Link className="dropdown-item" href="/admin/dashboard">
-                          <i className="fa fa-cog me-2"></i> Panel Admin
-                        </Link>
-                      </li>
-                    )}
-                    <li><hr className="dropdown-divider" /></li>
-                    <li>
-                      <button
-                        className="dropdown-item text-danger"
-                        onClick={handleLogout}
-                      >
-                        <i className="fa fa-sign-out me-2"></i> Cerrar sesión
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : (
-                <Link className="nav-link" href="/auth/login">
-                  <i className="fa fa-user me-2"></i> Iniciar sesión
-                </Link>
-              )}
+            <div className="topbar-group">
+              <span>Envíos en 24/48h | Garantía de autenticidad</span>
             </div>
           </div>
         </div>
-      </nav>
+
+        <nav className="navbar navbar-expand-lg luxury-navbar">
+          <div className="container navbar-inner">
+            <Link className="navbar-brand luxury-brand" href="/">
+              <span className="brand-mark">LD</span>
+              <span>Licores <strong>Deluxe</strong></span>
+            </Link>
+
+            <div className="collapse navbar-collapse" id="navbarContent">
+              <ul className="navbar-nav mx-auto luxury-nav">
+                <li className="nav-item"><Link className="nav-link" href="/">Inicio</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/about">Nosotros</Link></li>
+                <li className="nav-item"><Link className="nav-link active" href="/shop">Productos</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/contact">Contacto</Link></li>
+              </ul>
+
+              <div className="luxury-userbar">
+                <Link href="/cart" className="luxury-icon" aria-label="Carrito">
+                  <i className="fa fa-shopping-cart"></i>
+                  <span className="cart-count">{cartCount}</span>
+                </Link>
+
+                {session ? (
+                  <div className="dropdown ms-3">
+                    <button
+                      className="btn luxury-account-button dropdown-toggle"
+                      type="button"
+                      id="userDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      title={session.user?.name || 'Mi cuenta'}
+                    >
+                      {session.user?.image ? (
+                        <Image
+                          src={session.user.image}
+                          alt="User profile"
+                          width={30}
+                          height={30}
+                          className="rounded-circle me-2"
+                        />
+                      ) : (
+                        <i className="fa fa-user-circle me-2"></i>
+                      )}
+                      <span className="user-button-label">{session.user?.name || 'Mi cuenta'}</span>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end luxury-user-menu">
+                      <li><Link className="dropdown-item" href="/account"><i className="fa fa-user me-2"></i> Mi perfil</Link></li>
+                      {isAdminUser && (
+                        <li><Link className="dropdown-item" href="/admin/dashboard"><i className="fa fa-cog me-2"></i> Panel Admin</Link></li>
+                      )}
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><button className="dropdown-item text-danger" onClick={handleLogout}><i className="fa fa-sign-out me-2"></i> Cerrar sesión</button></li>
+                    </ul>
+                  </div>
+                ) : (
+                  <Link className="luxury-login" href="/auth/login">
+                    <i className="fa fa-user me-2"></i> Iniciar sesión
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
 
       {/* Modal de Búsqueda */}
       <div className="modal fade bg-white" id="templatemo_search" tabIndex={-1} role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
@@ -381,173 +345,82 @@ export default function DetalleProducto() {
         </div>
       </div>
 
-      {/* Contenido principal del producto */}
-      <div className="container py-5">
-        <div className="row gx-5">
-          {/* Barra Lateral de Categorías */}
-          <div className="col-lg-3">
-            <h1 className="h2 pb-4">Categorías</h1>
-            <ul className="list-unstyled templatemo-accordion">
+      <div className="shop-shell">
+        <div className="container product-detail-layout">
+          <aside className="shop-sidebar">
+            <h3>Categorías</h3>
+            <ul className="sidebar-list">
               {categorias.length === 0 ? (
-                <li className="text-muted">No hay categorías registradas</li>
+                <li className="empty-state">No hay categorías registradas</li>
               ) : (
                 categorias.map((categoria) => (
-                  <li key={categoria._id} className="pb-2">
-                    <Link
-                      className="d-flex justify-content-between h5 text-decoration-none"
-                      href={`/categorias/${categoria.slug}`}
-                    >
-                      {categoria.nombre}
-                      <i className="fa fa-fw fa-chevron-circle-right mt-1"></i>
-                    </Link>
+                  <li key={categoria._id}>
+                    <button type="button" className="active">
+                      <span>{categoria.nombre}</span>
+                      <i className="fa fa-chevron-right"></i>
+                    </button>
                   </li>
                 ))
               )}
             </ul>
+          </aside>
+
+          <div className="product-gallery">
+            <div className="product-gallery-main">
+              <img src={producto.imagen} alt={producto.nombre} />
+            </div>
+
+            {producto.imagenesAdicionales && producto.imagenesAdicionales.length > 0 && (
+              <div className="product-thumbs">
+                {producto.imagenesAdicionales.map((img, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="product-thumb"
+                    onClick={() => setProducto({ ...producto, imagen: img })}
+                  >
+                    <Image
+                      src={img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_API_URL}${img}`}
+                      alt={`Vista ${index + 1} de ${producto.nombre}`}
+                      width={200}
+                      height={160}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Contenido principal del producto */}
-          <div className="col-lg-9">
-            <div className="row">
-              <div className="col-lg-6 mb-5 mb-lg-0">
-                <div className="border rounded-4 mb-3 d-flex justify-content-center">
-                  <img
-                    src={producto.imagen}
-                    alt={producto.nombre}
-                    width={550}
-                    height="auto"
-                    style={{ objectFit: 'cover', borderRadius: '10px' }}
-                  />
-                </div>
-                
-                {producto.imagenesAdicionales && producto.imagenesAdicionales.length > 0 && (
-                  <div className="row gx-3">
-                    {producto.imagenesAdicionales.map((img, index) => (
-                      <div className="col-4" key={index}>
-                        <button 
-                          className="border rounded-2 p-1 w-100"
-                          onClick={() => setProducto({...producto, imagen: img})}
-                        >
-                          <Image
-                            src={img.startsWith('http') ? img : `${process.env.NEXT_PUBLIC_API_URL}${img}`}
-                            alt={`Vista ${index + 1} de ${producto.nombre}`}
-                            width={200}
-                            height={200}
-                            className="img-fluid rounded-2"
-                          />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+          <div className="product-summary">
+            <span className="eyebrow dark">{producto.categoria?.nombre || 'Licores premium'}</span>
+            <h1>{producto.nombre}</h1>
+
+            <div className="product-price">${producto.precio.toFixed(2)}</div>
+
+            <span className={producto.stock > 0 ? 'stock-pill' : 'stock-pill out'}>
+              <i className={producto.stock > 0 ? 'fas fa-check-circle' : 'fas fa-times-circle'}></i>
+              {producto.stock > 0 ? 'En stock' : 'Sin stock'}
+            </span>
+
+            <p>{producto.descripcion}</p>
+
+            <div className="product-actions-row">
+              <div className="quantity-box">
+                <button type="button" onClick={() => setCantidad(prev => Math.max(1, prev - 1))}>-</button>
+                <input type="number" value={cantidad} min="1" max={producto.stock} onChange={(e) => setCantidad(Math.max(1, Math.min(producto.stock, parseInt(e.target.value) || 1)))} />
+                <button type="button" onClick={() => setCantidad(prev => Math.min(producto.stock, prev + 1))}>+</button>
               </div>
 
-              <div className="col-lg-6">
-                <h2 className="fw-bold mb-4">{producto.nombre}</h2>
-                
-                {producto.rating && (
-                  <div className="d-flex align-items-center mb-3">
-                    <div className="text-warning me-2">
-                      {[...Array(5)].map((_, i) => (
-                        <i 
-                          key={i} 
-                          className={`fas fa-star ${i < Math.floor(producto.rating!) ? 'fas' : 'far'}`}
-                        ></i>
-                      ))}
-                    </div>
-                    <span className="text-muted">
-                      {producto.rating.toFixed(1)} ({producto.numReviews} reseñas)
-                    </span>
-                  </div>
-                )}
-
-                <div className="mb-4">
-                  <span className="text-primary fs-3 fw-bold">${producto.precio.toFixed(2)}</span>
-                  {producto.stock > 0 ? (
-                    <span className="text-success ms-3">
-                      <i className="fas fa-check-circle me-1"></i> En stock
-                    </span>
-                  ) : (
-                    <span className="text-danger ms-3">
-                      <i className="fas fa-times-circle me-1"></i> Sin stock
-                    </span>
-                  )}
-                </div>
-
-                <p className="mb-4">{producto.descripcion}</p>
-
-                {producto.categoria && (
-                  <div className="mb-3">
-                    <span className="fw-bold me-2">Categoría:</span>
-                    <Link 
-                      href={`/categorias/${producto.categoria.slug || producto.categoria._id}`} 
-                      className="text-decoration-none text-success"
-                    >
-                      {producto.categoria.nombre}
-                    </Link>
-                  </div>
-                )}
-
-                {producto.especificaciones && producto.especificaciones.length > 0 && (
-                  <div className="mb-4">
-                    <h5 className="fw-bold mb-3">Especificaciones</h5>
-                    <ul className="list-unstyled">
-                      {producto.especificaciones.map((item, index) => (
-                        <li key={index} className="mb-2">
-                          <i className="fas fa-check text-success me-2"></i>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                <div className="row gx-3 mb-4">
-                  <div className="col-md-4 mb-3 mb-md-0">
-                    <label className="form-label">Cantidad</label>
-                    <div className="input-group">
-                      <button 
-                        className="btn btn-outline-secondary" 
-                        type="button"
-                        onClick={() => setCantidad(prev => Math.max(1, prev - 1))}
-                      >
-                        -
-                      </button>
-                      <input 
-                        type="number" 
-                        className="form-control text-center" 
-                        value={cantidad}
-                        min="1"
-                        max={producto.stock}
-                        onChange={(e) => setCantidad(Math.max(1, Math.min(producto.stock, parseInt(e.target.value) || 1)))}
-                      />
-                      <button 
-                        className="btn btn-outline-secondary" 
-                        type="button"
-                        onClick={() => setCantidad(prev => Math.min(producto.stock, prev + 1))}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="d-flex gap-3">
-                  <button
-                    className="btn btn-success flex-grow-1 py-3"
-                    onClick={agregarAlCarrito}
-                    disabled={producto.stock <= 0}
-                  >
-                    <i className="fas fa-shopping-cart me-2"></i>
-                    Añadir al carrito
-                  </button>
-                  <button className="btn btn-outline-success flex-grow-1 py-3">
-                    <i className="fas fa-heart me-2"></i>
-                    Guardar
-                  </button>
-                </div>
-              </div>
+              <button className="btn luxury-button primary" onClick={agregarAlCarrito} disabled={producto.stock <= 0}>
+                <i className="fas fa-shopping-cart me-2"></i> Añadir
+              </button>
             </div>
+
+            <ul className="meta-list">
+              <li><strong>Categoría:</strong> {producto.categoria?.nombre || 'Sin categoría'}</li>
+              <li><strong>Entrega:</strong> 24/48h en península</li>
+              <li><strong>Garantía:</strong> autenticidad y embalaje premium</li>
+            </ul>
           </div>
         </div>
       </div>
