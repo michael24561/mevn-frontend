@@ -1,3 +1,23 @@
 {
-  "/page": "app/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/(public)/about/page": "app/(public)/about/page.js",
+  "/(public)/contact/page": "app/(public)/contact/page.js",
+  "/account/page": "app/account/page.js",
+  "/cart/page": "app/cart/page.js",
+  "/categorias/[slug]/page": "app/categorias/[slug]/page.js",
+  "/page": "app/page.js",
+  "/shop/[id]/page": "app/shop/[id]/page.js",
+  "/orden-confirmada/[id]/page": "app/orden-confirmada/[id]/page.js",
+  "/shop/page": "app/shop/page.js",
+  "/compra-exitosa/page": "app/compra-exitosa/page.js",
+  "/(public)/auth/register/page": "app/(public)/auth/register/page.js",
+  "/(public)/auth/login/page": "app/(public)/auth/login/page.js",
+  "/admin/clientes/page": "app/admin/clientes/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/categorias/page": "app/admin/categorias/page.js",
+  "/admin/proveedores/page": "app/admin/proveedores/page.js",
+  "/admin/empleados/page": "app/admin/empleados/page.js",
+  "/admin/reportes/page": "app/admin/reportes/page.js",
+  "/admin/productos/page": "app/admin/productos/page.js"
 }

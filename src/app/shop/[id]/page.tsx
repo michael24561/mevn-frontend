@@ -1,4 +1,4 @@
-// app/shop/[id]/page.tsx - VERSIÓN CON ESTILOS EN LÍNEA QUE ANULAN CSS GLOBAL
+// app/shop/[id]/page.tsx - VERSIÓN CORREGIDA
 
 'use client';
 
@@ -129,6 +129,9 @@ export default function DetalleProducto() {
         throw new Error(errorData.message || 'Error al agregar al carrito');
       }
 
+      // 🔥 CORRECCIÓN: Declarar la variable data
+      const data = await response.json();
+      
       toast.update(toastId, {
         render: `¡${producto.nombre} agregado al carrito!`,
         type: "success",
