@@ -163,7 +163,11 @@ export default function AdminLayoutClient({
           display: 'flex', 
           flexDirection: 'column',
           transition: 'margin-left 0.3s ease',
-          marginLeft: sidebarOpen ? '280px' : '0px'
+          // ELIMINA O COMENTA ESTA LÍNEA - es la que causa el espacio negro
+          // marginLeft: sidebarOpen ? '280px' : '0px',
+          // En su lugar, usa width con calc
+          width: sidebarOpen ? 'calc(100% - 280px)' : '100%',
+          maxWidth: sidebarOpen ? 'calc(100% - 280px)' : '100%'
         }}>
           <AdminHeader 
             onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -178,7 +182,8 @@ export default function AdminLayoutClient({
               ? 'rgba(18, 13, 11, 0.88)'
               : 'rgba(247, 243, 238, 0.9)',
             minHeight: 'calc(100vh - 64px)',
-            transition: 'background-color 0.3s ease, background 0.3s ease'
+            transition: 'background-color 0.3s ease, background 0.3s ease',
+            width: '100%'
           }}>
             {children}
           </Box>
@@ -186,4 +191,4 @@ export default function AdminLayoutClient({
       </Box>
     </ThemeProvider>
   );
-} 
+}
