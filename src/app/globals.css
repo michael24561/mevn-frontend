@@ -1583,3 +1583,180 @@ section.bg-success li {
     padding: 1.5rem;
   }
 }
+
+/* ============================================
+   FIX: Categorías en página de detalle de producto
+   ============================================ */
+
+/* Sobrescribir el tamaño de las categorías en la página de detalle */
+.product-detail-layout .shop-sidebar {
+  min-width: 160px !important;
+  max-width: 200px !important;
+  padding: 0.5rem !important;
+}
+
+.product-detail-layout .shop-sidebar h3 {
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.4rem !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  color: #2d1b0e !important;
+  border-bottom: 2px solid #8b1e3f !important;
+  padding-bottom: 0.3rem !important;
+}
+
+.product-detail-layout .sidebar-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+.product-detail-layout .sidebar-list li {
+  margin-bottom: 0.15rem !important;
+}
+
+.product-detail-layout .sidebar-list button {
+  width: 100% !important;
+  padding: 0.2rem 0.4rem !important;
+  font-size: 0.7rem !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #f0ebe6 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  color: #4a3728 !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+  border-radius: 0 !important;
+}
+
+.product-detail-layout .sidebar-list button:hover,
+.product-detail-layout .sidebar-list button.active {
+  background: #f5f0eb !important;
+  padding-left: 0.6rem !important;
+  color: #8b1e3f !important;
+  font-weight: 500 !important;
+  border-color: #f0ebe6 !important;
+  border-radius: 0 !important;
+}
+
+.product-detail-layout .sidebar-list button span {
+  font-size: 0.7rem !important;
+  line-height: 1.2 !important;
+}
+
+.product-detail-layout .sidebar-list button i {
+  width: auto !important;
+  height: auto !important;
+  font-size: 0.45rem !important;
+  color: #8b1e3f !important;
+  opacity: 0.4 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+.product-detail-layout .empty-state {
+  padding: 0.25rem 0.4rem !important;
+  font-size: 0.7rem !important;
+  color: #999 !important;
+}
+
+/* ============================================
+   FIX: Layout de detalle de producto
+   ============================================ */
+
+.product-detail-layout {
+  display: grid !important;
+  grid-template-columns: 180px 1fr 1fr !important;
+  gap: 1.5rem !important;
+  align-items: start !important;
+  padding: 1.5rem 0 !important;
+}
+
+/* ============================================
+   FIX: Product summary - texto más compacto
+   ============================================ */
+
+.product-summary h1 {
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  margin: 0.2rem 0 0.1rem !important;
+  line-height: 1.2 !important;
+}
+
+.product-summary .product-price {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #8b1e3f !important;
+  margin: 0.1rem 0 !important;
+}
+
+.product-summary .eyebrow {
+  font-size: 0.6rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  color: #8b1e3f !important;
+  font-weight: 600 !important;
+}
+
+.product-summary p {
+  font-size: 0.8rem !important;
+  line-height: 1.5 !important;
+  color: #555 !important;
+  margin: 0.3rem 0 0.6rem !important;
+}
+
+.product-summary .stock-pill {
+  padding: 0.15rem 0.6rem !important;
+  font-size: 0.65rem !important;
+}
+
+.product-summary .meta-list {
+  font-size: 0.7rem !important;
+  color: #666 !important;
+  border-top: 1px solid #eee !important;
+  padding-top: 0.4rem !important;
+  margin-top: 0.8rem !important;
+}
+
+.product-summary .meta-list li {
+  padding: 0.3rem 0.5rem !important;
+  font-size: 0.7rem !important;
+}
+
+/* ============================================
+   FIX: Product gallery
+   ============================================ */
+
+.product-gallery-main img {
+  height: 380px !important;
+  object-fit: contain !important;
+}
+
+.product-thumbs {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.product-thumb img {
+  height: 80px !important;
+}
+
+/* ============================================
+   FIX: Responsive
+   ============================================ */
+
+@media (max-width: 992px) {
+  .product-detail-layout {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .product-detail-layout .shop-sidebar {
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+}
