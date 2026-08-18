@@ -45,20 +45,22 @@ export default function AdminLayoutClient({
     palette: {
       mode: darkMode ? 'dark' : 'light',
       primary: {
-        main: '#59ab6e', // Verde principal del proyecto
-        light: '#69bb7e',
-        dark: '#4a8c5a',
+        main: '#8b1e3f',
+        light: '#b73452',
+        dark: '#63162d',
       },
       secondary: {
-        main: '#1976d2', // Azul para elementos secundarios
+        main: '#d4af6a',
+        light: '#f2d8a3',
+        dark: '#a77f3d',
       },
       background: {
-        default: darkMode ? '#121212' : '#f8f9fa',
-        paper: darkMode ? '#1e1e1e' : '#ffffff',
+        default: darkMode ? '#12100f' : '#f7f3ee',
+        paper: darkMode ? '#1b1715' : '#ffffff',
       },
       text: {
-        primary: darkMode ? '#ffffff' : '#212934',
-        secondary: darkMode ? '#b0b0b0' : '#6c757d',
+        primary: darkMode ? '#ffffff' : '#17120f',
+        secondary: darkMode ? '#d7c8ba' : '#6b625d',
       },
     },
     typography: {
@@ -93,13 +95,14 @@ export default function AdminLayoutClient({
         styleOverrides: {
           root: {
             textTransform: 'none',
-            borderRadius: '8px',
-            fontWeight: 500,
+            borderRadius: '10px',
+            fontWeight: 600,
+            letterSpacing: '0.01em',
           },
           contained: {
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            boxShadow: '0 8px 18px rgba(139, 30, 63, 0.18)',
             '&:hover': {
-              boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+              boxShadow: '0 12px 22px rgba(139, 30, 63, 0.24)',
             },
           },
         },
@@ -107,20 +110,20 @@ export default function AdminLayoutClient({
       MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: '12px',
+            borderRadius: '16px',
             boxShadow: darkMode 
-              ? '0 2px 8px rgba(0,0,0,0.3)' 
-              : '0 2px 8px rgba(0,0,0,0.1)',
+              ? '0 12px 28px rgba(0,0,0,0.22)' 
+              : '0 10px 28px rgba(23,18,15,0.08)',
             border: darkMode 
-              ? '1px solid rgba(255,255,255,0.1)' 
-              : '1px solid rgba(0,0,0,0.05)',
+              ? '1px solid rgba(255,255,255,0.08)' 
+              : '1px solid rgba(23,18,15,0.04)',
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
           root: {
-            borderRadius: '12px',
+            borderRadius: '16px',
           },
         },
       },
@@ -143,8 +146,10 @@ export default function AdminLayoutClient({
       <Box sx={{ 
         display: 'flex', 
         minHeight: '100vh', 
-        backgroundColor: darkMode ? '#121212' : '#f8f9fa',
-        transition: 'background-color 0.3s ease'
+        background: darkMode
+          ? 'linear-gradient(135deg, #120d0b 0%, #1a1412 35%, #0f0d0d 100%)'
+          : 'linear-gradient(135deg, #f7f3ee 0%, #f1e7da 100%)',
+        transition: 'background-color 0.3s ease, background 0.3s ease'
       }}>
         <AdminSidebar 
           open={sidebarOpen} 
@@ -169,9 +174,11 @@ export default function AdminLayoutClient({
           <Box component="main" sx={{ 
             flexGrow: 1, 
             p: 3,
-            backgroundColor: darkMode ? '#121212' : '#f8f9fa',
+            background: darkMode
+              ? 'rgba(18, 13, 11, 0.88)'
+              : 'rgba(247, 243, 238, 0.9)',
             minHeight: 'calc(100vh - 64px)',
-            transition: 'background-color 0.3s ease'
+            transition: 'background-color 0.3s ease, background 0.3s ease'
           }}>
             {children}
           </Box>

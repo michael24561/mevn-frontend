@@ -2,21 +2,22 @@
 
 /* Variables de colores */
 :root {
-  --primary-color: #59ab6e;
-  --primary-light: #69bb7e;
-  --primary-dark: #4a8c5a;
-  --secondary-color: #1976d2;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
-  --light-color: #f8f9fa;
-  --dark-color: #212934;
-  --gray-color: #6c757d;
-  --border-color: rgba(0,0,0,0.05);
-  --shadow-light: 0 2px 8px rgba(0,0,0,0.1);
-  --shadow-medium: 0 4px 12px rgba(0,0,0,0.15);
-  --shadow-heavy: 0 8px 25px rgba(0,0,0,0.2);
+  --primary-color: #8b1e3f;
+  --primary-light: #b73452;
+  --primary-dark: #63162d;
+  --secondary-color: #d4af6a;
+  --secondary-light: #f2d8a3;
+  --success-color: #2f8f6a;
+  --warning-color: #d9a441;
+  --danger-color: #c74b4b;
+  --info-color: #4d7aa8;
+  --light-color: #f7f3ee;
+  --dark-color: #17120f;
+  --gray-color: #6b625d;
+  --border-color: rgba(23, 18, 15, 0.08);
+  --shadow-light: 0 2px 10px rgba(23, 18, 15, 0.08);
+  --shadow-medium: 0 8px 24px rgba(23, 18, 15, 0.12);
+  --shadow-heavy: 0 14px 40px rgba(23, 18, 15, 0.18);
 }
 
 /* Estilos generales del admin */
@@ -24,6 +25,7 @@
   background-color: var(--light-color);
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
+  color: var(--dark-color);
 }
 
 /* Animaciones personalizadas */

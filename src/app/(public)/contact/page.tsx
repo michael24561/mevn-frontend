@@ -1,4 +1,3 @@
-// src/app/contact/page.tsx
 'use client';
 
 import { useSession, signOut } from 'next-auth/react';
@@ -17,320 +16,162 @@ export default function PaginaDeContacto() {
     }
   };
 
+  const isAdminUser = ['admin', 'administrador', 'super_admin'].includes(
+    String(session?.user?.role ?? '').toLowerCase()
+  );
+
   return (
-    <>
-      {/* Barra superior */}
-      <nav className="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block">
-        <div className="container text-light">
-          <div className="w-100 d-flex justify-content-between">
-            <div>
-              <i className="fa fa-envelope mx-2"></i>
-              <a className="navbar-sm-brand text-light text-decoration-none" href="mailto:info@licoresdeluxe.com">
-                info@licoresdeluxe.com
-              </a>
-              <i className="fa fa-phone mx-2"></i>
-              <a className="navbar-sm-brand text-light text-decoration-none" href="tel:+34911234567">
-                +34 911 234 567
-              </a>
+    <div className="luxury-shell">
+      <header className="luxury-header">
+        <div className="topbar">
+          <div className="container topbar-inner">
+            <div className="topbar-group">
+              <span><i className="fa fa-envelope"></i> info@licoresdeluxe.com</span>
+              <span><i className="fa fa-phone"></i> +34 911 234 567</span>
             </div>
-            <div>
-              <span className="text-light small">
-                Envíos en 24/48h | Garantía de autenticidad
-              </span>
+            <div className="topbar-group">
+              <span>Envíos en 24/48h | Garantía de autenticidad</span>
             </div>
           </div>
         </div>
-      </nav>
 
-      {/* Barra principal */}
-      <nav className="navbar navbar-expand-lg navbar-light shadow">
-        <div className="container d-flex justify-content-between align-items-center">
-          <Link className="navbar-brand text-success logo h1 align-self-center" href="/">
-            Licores<span className="text-light">Deluxe</span>
-          </Link>
+        <nav className="navbar navbar-expand-lg luxury-navbar">
+          <div className="container navbar-inner">
+            <Link className="navbar-brand luxury-brand" href="/">
+              <span className="brand-mark">LD</span>
+              <span>Licores <strong>Deluxe</strong></span>
+            </Link>
 
-          <button 
-            className="navbar-toggler border-0" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarContent"
-            aria-controls="navbarContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between" id="navbarContent">
-            <div className="flex-fill">
-              <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                <li className="nav-item">
-                  <Link className="nav-link" href="/">Inicio</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href="/about">Nosotros</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href="/shop">Productos</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link active" href="/contact">Contacto</Link>
-                </li>
+            <div className="collapse navbar-collapse" id="navbarContent">
+              <ul className="navbar-nav mx-auto luxury-nav">
+                <li className="nav-item"><Link className="nav-link" href="/">Inicio</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/about">Nosotros</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/shop">Productos</Link></li>
+                <li className="nav-item"><Link className="nav-link active" href="/contact">Contacto</Link></li>
               </ul>
-            </div>
-            
-            <div className="navbar align-self-center d-flex">
-              {/* Componente de búsqueda para móviles */}
-              <div className="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
-                <div className="input-group">
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="inputMobileSearch" 
-                    placeholder="Buscar licores..." 
-                  />
-                  <div className="input-group-text">
-                    <i className="fa fa-fw fa-search"></i>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icono de búsqueda para desktop */}
-              <a className="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                <i className="fa fa-fw fa-search text-dark mr-2"></i>
-              </a>
-              
-              {/* Carrito de compras */}
-              <Link className="nav-icon position-relative text-decoration-none" href="/cart">
-                <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">3</span>
-              </Link>
 
-              {/* Área de usuario */}
-              {status === "authenticated" ? (
-                <div className="dropdown ms-3">
-                  <button
-                    className="btn btn-link nav-link dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    id="userDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    {session.user?.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt="User profile"
-                        width={32}
-                        height={32}
-                        className="rounded-circle me-2"
-                      />
-                    ) : (
-                      <i className="fa fa-user-circle me-2"></i>
-                    )}
-                    <span className="d-none d-lg-inline">{session.user?.name || 'Mi cuenta'}</span>
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li>
-                      <Link className="dropdown-item" href="/account">
-                        <i className="fa fa-user me-2"></i> Mi perfil
-                      </Link>
-                    </li>
-                    {session.user?.role === 'admin' && (
-                      <li>
-                        <Link className="dropdown-item" href="/admin/dashboard">
-                          <i className="fa fa-cog me-2"></i> Panel Admin
-                        </Link>
-                      </li>
-                    )}
-                    <li><hr className="dropdown-divider" /></li>
-                    <li>
-                      <button
-                        className="dropdown-item text-danger"
-                        onClick={handleLogout}
-                      >
-                        <i className="fa fa-sign-out me-2"></i> Cerrar sesión
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : (
-                <Link className="nav-link" href="/auth/login">
-                  <i className="fa fa-user me-2"></i> Iniciar sesión
+              <div className="luxury-userbar">
+                <Link href="/cart" className="luxury-icon" aria-label="Carrito">
+                  <i className="fa fa-shopping-cart"></i>
+                  <span className="cart-count">3</span>
                 </Link>
-              )}
+
+                {status === 'authenticated' ? (
+                  <div className="dropdown ms-3">
+                    <button
+                      className="btn luxury-account-button dropdown-toggle"
+                      type="button"
+                      id="userDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      title={session.user?.name || 'Mi cuenta'}
+                    >
+                      {session.user?.image ? (
+                        <Image
+                          src={session.user.image}
+                          alt="User profile"
+                          width={30}
+                          height={30}
+                          className="rounded-circle me-2"
+                        />
+                      ) : (
+                        <i className="fa fa-user-circle me-2"></i>
+                      )}
+                      <span className="user-button-label">{session.user?.name || 'Mi cuenta'}</span>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end luxury-user-menu">
+                      <li><Link className="dropdown-item" href="/account"><i className="fa fa-user me-2"></i> Mi perfil</Link></li>
+                      {isAdminUser && (
+                        <li><Link className="dropdown-item" href="/admin/dashboard"><i className="fa fa-cog me-2"></i> Panel Admin</Link></li>
+                      )}
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><button className="dropdown-item text-danger" onClick={handleLogout}><i className="fa fa-sign-out me-2"></i> Cerrar sesión</button></li>
+                    </ul>
+                  </div>
+                ) : (
+                  <Link className="luxury-login" href="/auth/login">
+                    <i className="fa fa-user me-2"></i> Iniciar sesión
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
-      {/* Modal de Búsqueda */}
-      <div className="modal fade bg-white" id="templatemo_search" tabIndex={-1} role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-        <div className="modal-dialog modal-lg" role="document">
-          <div className="w-100 pt-1 mb-5 text-right">
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
-          <form action="" method="get" className="modal-content modal-body border-0 p-0">
-            <div className="input-group mb-2">
-              <input type="text" className="form-control" id="inputModalSearch" name="q" placeholder="Buscar licores..." />
-              <button type="submit" className="input-group-text bg-success text-light">
-                <i className="fa fa-fw fa-search text-white"></i>
-              </button>
+      <main>
+        <section className="page-hero contact-hero">
+          <div className="container page-hero-content contact-layout">
+            <div className="page-hero-copy">
+              <span className="eyebrow">Contacto</span>
+              <h1>Estamos aquí para ayudarte.</h1>
+              <p>
+                Te asesoramos para elegir la botella ideal, resolver dudas sobre productos y ayudarte
+                a encontrar la mejor opción para cada momento especial.
+              </p>
+
+              <div className="contact-highlights">
+                <div><i className="fas fa-clock"></i> Lunes a viernes: 9:00 - 20:00</div>
+                <div><i className="fas fa-map-marker-alt"></i> Madrid 28001</div>
+                <div><i className="fas fa-envelope"></i> info@licoresdeluxe.com</div>
+              </div>
             </div>
-          </form>
-        </div>
-      </div>
 
-      {/* Sección Principal */}
-      <div className="container-fluid bg-light py-5">
-        <div className="col-md-6 m-auto text-center">
-          <h1 className="h1">Contáctanos</h1>
-          <p>
-            ¿Tienes dudas sobre nuestros licores? Escríbenos y con gusto te atenderemos.
-            Descubre el arte del buen beber.
-          </p>
-        </div>
-      </div>
+            <div className="contact-visual">
+              <img
+                src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80"
+                alt="Consultoría de licores"
+              />
+            </div>
+          </div>
+        </section>
 
-      {/* Formulario de Contacto */}
-      <div className="container py-5">
-        <div className="row py-5">
+        <section className="container section-block contact-wrap">
           <ContactForm />
-        </div>
-      </div>
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="bg-dark text-light" id="licores_footer">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4 pt-5">
-              <h2 className="h2 text-success border-bottom pb-3 border-light logo">Licores Deluxe</h2>
-              <ul className="list-unstyled footer-link-list">
-                <li className="mb-2">
-                  <i className="fas fa-map-marker-alt fa-fw me-2"></i>
-                  Av. de los Licores 123, Madrid 28001
-                </li>
-                <li className="mb-2">
-                  <i className="fa fa-phone fa-fw me-2"></i>
-                  <a className="text-light text-decoration-none" href="tel:+34911234567">+34 911 234 567</a>
-                </li>
-                <li className="mb-2">
-                  <i className="fa fa-envelope fa-fw me-2"></i>
-                  <a className="text-light text-decoration-none" href="mailto:info@licoresdeluxe.com">info@licoresdeluxe.com</a>
-                </li>
-                <li>
-                  <i className="fa fa-clock fa-fw me-2"></i>
-                  Lunes-Viernes: 9:00 - 20:00
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-md-4 pt-5">
-              <h2 className="h2 border-bottom pb-3 border-light">Nuestros Productos</h2>
-              <ul className="list-unstyled footer-link-list">
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Whiskies Premium</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Vinos & Champagnes</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Licores Artesanales</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Ron & Brandy</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Vodka & Ginebra</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Ediciones Limitadas</Link></li>
-                <li><Link className="text-light text-decoration-none" href="#">Accesorios</Link></li>
-              </ul>
-            </div>
-
-            <div className="col-md-4 pt-5">
-              <h2 className="h2 border-bottom pb-3 border-light">Información</h2>
-              <ul className="list-unstyled footer-link-list">
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="/">Inicio</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="/about">Sobre Nosotros</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Política de Envíos</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="#">Preguntas Frecuentes</Link></li>
-                <li className="mb-2"><Link className="text-light text-decoration-none" href="/contact">Contacto</Link></li>
-                <li><Link className="text-light text-decoration-none" href="#">Política de Privacidad</Link></li>
-              </ul>
-            </div>
+      <footer className="luxury-footer">
+        <div className="container footer-grid">
+          <div>
+            <h4>Licores Deluxe</h4>
+            <ul className="footer-list">
+              <li><i className="fas fa-map-marker-alt"></i> Av. de los Licores 123, Madrid 28001</li>
+              <li><i className="fa fa-phone"></i> +34 911 234 567</li>
+              <li><i className="fa fa-envelope"></i> info@licoresdeluxe.com</li>
+            </ul>
           </div>
 
-          <div className="row mb-4">
-            <div className="col-12 mb-3">
-              <div className="w-100 my-3 border-top border-light"></div>
-            </div>
-            <div className="col-auto me-auto">
-              <ul className="list-inline footer-icons">
-                <li className="list-inline-item border border-light rounded-circle text-center me-2">
-                  <a className="text-light text-decoration-none d-flex align-items-center justify-content-center" 
-                    target="_blank" 
-                    href="http://facebook.com/licoresdeluxe" 
-                    rel="noopener noreferrer"
-                    style={{width: '40px', height: '40px'}}>
-                    <i className="fab fa-facebook-f fa-lg"></i>
-                  </a>
-                </li>
-                <li className="list-inline-item border border-light rounded-circle text-center me-2">
-                  <a className="text-light text-decoration-none d-flex align-items-center justify-content-center" 
-                    target="_blank" 
-                    href="https://www.instagram.com/licoresdeluxe" 
-                    rel="noopener noreferrer"
-                    style={{width: '40px', height: '40px'}}>
-                    <i className="fab fa-instagram fa-lg"></i>
-                  </a>
-                </li>
-                <li className="list-inline-item border border-light rounded-circle text-center me-2">
-                  <a className="text-light text-decoration-none d-flex align-items-center justify-content-center" 
-                    target="_blank" 
-                    href="https://twitter.com/licoresdeluxe" 
-                    rel="noopener noreferrer"
-                    style={{width: '40px', height: '40px'}}>
-                    <i className="fab fa-twitter fa-lg"></i>
-                  </a>
-                </li>
-                <li className="list-inline-item border border-light rounded-circle text-center">
-                  <a className="text-light text-decoration-none d-flex align-items-center justify-content-center" 
-                    target="_blank" 
-                    href="https://www.youtube.com/licoresdeluxe" 
-                    rel="noopener noreferrer"
-                    style={{width: '40px', height: '40px'}}>
-                    <i className="fab fa-youtube fa-lg"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="col-auto">
-              <label className="sr-only" htmlFor="subscribeEmail">Suscríbete</label>
-              <div className="input-group mb-2">
-                <input 
-                  type="text" 
-                  className="form-control bg-dark border-light text-light" 
-                  id="subscribeEmail" 
-                  placeholder="Tu correo electrónico" 
-                />
-                <button className="input-group-text btn-success text-light">
-                  Suscribirse
-                </button>
-              </div>
-            </div>
+          <div>
+            <h4>Productos</h4>
+            <ul className="footer-list">
+              <li>Whiskies Premium</li>
+              <li>Vinos & Champagne</li>
+              <li>Ron & Brandy</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>Información</h4>
+            <ul className="footer-list">
+              <li><Link href="/about">Sobre nosotros</Link></li>
+              <li><Link href="/contact">Contacto</Link></li>
+              <li>Política de envíos</li>
+            </ul>
           </div>
         </div>
 
-        <div className="w-100 bg-black py-3">
-          <div className="container">
-            <div className="row pt-2">
-              <div className="col-12">
-                <p className="text-left m-0">
-                  &copy; {new Date().getFullYear()} Licores Deluxe - Todos los derechos reservados |
-                  Consumo responsable. Prohibida la venta a menores de 18 años.
-                </p>
-              </div>
+        <div className="footer-bottom">
+          <div className="container footer-bottom-inner">
+            <span>© {new Date().getFullYear()} Licores Deluxe. Todos los derechos reservados.</span>
+            <div className="socials">
+              <a href="https://facebook.com" target="_blank" rel="noreferrer"><i className="fab fa-facebook-f"></i></a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer"><i className="fab fa-instagram"></i></a>
+              <a href="https://x.com" target="_blank" rel="noreferrer"><i className="fab fa-x-twitter"></i></a>
             </div>
           </div>
         </div>
       </footer>
-
-      {/* Scripts */}
-      <script src="/assets/js/jquery-1.11.0.min.js"></script>
-      <script src="/assets/js/jquery-migrate-1.2.1.min.js"></script>
-      <script src="/assets/js/bootstrap.bundle.min.js"></script>
-      <script src="/assets/js/templatemo.js"></script>
-      <script src="/assets/js/custom.js"></script>
-    </>
+    </div>
   );
 }
