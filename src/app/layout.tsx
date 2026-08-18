@@ -5,8 +5,7 @@ import '../../public/assets/css/bootstrap.min.css';
 import '../../public/assets/css/templatemo.css';
 import '../../public/assets/css/custom.css';
 import '../../public/assets/css/fontawesome.css';
-import { Providers } from './providers';
-import { ToastContainer } from 'react-toastify';
+import { Providers } from './providers';import BootstrapClient from '../components/BoostrapClient';import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = Geist({
@@ -37,6 +36,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
+          <BootstrapClient />
           <main className={isAuthPage ? 'bg-gray-50' : ''}>
             {children}
           </main>
