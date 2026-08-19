@@ -83,7 +83,6 @@ export default function DetalleProducto() {
         const categoriasResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias`);
         const categoriasData = await categoriasResponse.json();
         
-        // Obtener productos similares (misma categoría)
         const productosResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/productos`);
         const todosProductos = await productosResponse.json();
         
@@ -242,7 +241,7 @@ export default function DetalleProducto() {
         <link rel="stylesheet" href="/assets/css/fontawesome.min.css" />
       </Head>
 
-      {/* ====== HEADER (UN SOLO) ====== */}
+      {/* ==================== HEADER (SOLO UNO) ==================== */}
       <nav className="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block">
         <div className="container text-light">
           <div className="w-100 d-flex justify-content-between">
@@ -342,7 +341,7 @@ export default function DetalleProducto() {
         </nav>
       </header>
 
-      {/* ====== CONTENIDO PRINCIPAL ====== */}
+      {/* ==================== CONTENIDO PRINCIPAL ==================== */}
       <div className="shop-shell">
         <div className="container" style={{ padding: '1.5rem 0' }}>
           <div style={{
@@ -541,7 +540,6 @@ export default function DetalleProducto() {
                 {producto.descripcion}
               </p>
 
-              {/* Acciones */}
               <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.8rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
                   <button
@@ -584,7 +582,6 @@ export default function DetalleProducto() {
                 </button>
               </div>
 
-              {/* Meta */}
               <ul style={{
                 listStyle: 'none',
                 padding: 0,
@@ -607,7 +604,7 @@ export default function DetalleProducto() {
             </div>
           </div>
 
-          {/* CARRUSEL DE PRODUCTOS SIMILARES */}
+          {/* PRODUCTOS SIMILARES */}
           {productosSimilares.length > 0 && (
             <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e8e0d8' }}>
               <h2 style={{
@@ -709,7 +706,7 @@ export default function DetalleProducto() {
         </div>
       </div>
 
-      {/* ====== FOOTER (UN SOLO) ====== */}
+      {/* ==================== FOOTER (SOLO UNO) ==================== */}
       <footer className="bg-dark text-light" id="licores_footer">
         <div className="container">
           <div className="row">
